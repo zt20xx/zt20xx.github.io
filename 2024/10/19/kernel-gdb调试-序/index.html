@@ -9,7 +9,7 @@
   <meta name="description" content="目前还是选择了qemu-system+gdb python调试内核它满足了以下需求1.避免大量的重复性工作2.特制断点，以及复杂的断点关系3.更清晰美观的打印信息 由于网络上相关资料比较少，就自己用官网api写了一下，目前使用效果还行。https:&#x2F;&#x2F;sourceware.org&#x2F;gdb&#x2F;current&#x2F;onlinedocs&#x2F;gdb.html&#x2F;Python-API.html主要使用gdb.Brea">
 <meta property="og:type" content="article">
 <meta property="og:title" content="kernel-gdb调试-序">
-<meta property="og:url" content="http://example.com/2024/10/19/kernel-gdb%E8%B0%83%E8%AF%95-%E5%BA%8F/index.html">
+<meta property="og:url" content="https://github.com/zt20xx/zt20xx.github.io/2024/10/19/kernel-gdb%E8%B0%83%E8%AF%95-%E5%BA%8F/index.html">
 <meta property="og:site_name" content="zt20xx">
 <meta property="og:description" content="目前还是选择了qemu-system+gdb python调试内核它满足了以下需求1.避免大量的重复性工作2.特制断点，以及复杂的断点关系3.更清晰美观的打印信息 由于网络上相关资料比较少，就自己用官网api写了一下，目前使用效果还行。https:&#x2F;&#x2F;sourceware.org&#x2F;gdb&#x2F;current&#x2F;onlinedocs&#x2F;gdb.html&#x2F;Python-API.html主要使用gdb.Brea">
 <meta property="og:locale" content="zh_CN">
@@ -19,18 +19,18 @@
 <meta property="article:tag" content="kernel">
 <meta name="twitter:card" content="summary">
   
-    <link rel="alternate" href="/atom.xml" title="zt20xx" type="application/atom+xml">
+    <link rel="alternate" href="/zt20xx/zt20xx.github.io/atom.xml" title="zt20xx" type="application/atom+xml">
   
   
-    <link rel="shortcut icon" href="/favicon.png">
+    <link rel="shortcut icon" href="/zt20xx/zt20xx.github.io/favicon.png">
   
   
   
-<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/zt20xx/zt20xx.github.io/css/style.css">
 
   
     
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+<link rel="stylesheet" href="/zt20xx/zt20xx.github.io/fancybox/jquery.fancybox.min.css">
 
   
   
@@ -44,7 +44,7 @@
   <div id="header-outer" class="outer">
     <div id="header-title" class="inner">
       <h1 id="logo-wrap">
-        <a href="/" id="logo">zt20xx</a>
+        <a href="/zt20xx/zt20xx.github.io/" id="logo">zt20xx</a>
       </h1>
       
     </div>
@@ -52,20 +52,20 @@
       <nav id="main-nav">
         <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
         
-          <a class="main-nav-link" href="/">Home</a>
+          <a class="main-nav-link" href="/zt20xx/zt20xx.github.io/">Home</a>
         
-          <a class="main-nav-link" href="/archives">Archives</a>
+          <a class="main-nav-link" href="/zt20xx/zt20xx.github.io/archives">Archives</a>
         
       </nav>
       <nav id="sub-nav">
         
         
-          <a class="nav-icon" href="/atom.xml" title="RSS 订阅"><span class="fa fa-rss"></span></a>
+          <a class="nav-icon" href="/zt20xx/zt20xx.github.io/atom.xml" title="RSS 订阅"><span class="fa fa-rss"></span></a>
         
         <a class="nav-icon nav-search-btn" title="搜索"><span class="fa fa-search"></span></a>
       </nav>
       <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://github.com/zt20xx/zt20xx.github.io"></form>
       </div>
     </div>
   </div>
@@ -74,7 +74,7 @@
       <div class="outer">
         <section id="main"><article id="post-kernel-gdb调试-序" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
-    <a href="/2024/10/19/kernel-gdb%E8%B0%83%E8%AF%95-%E5%BA%8F/" class="article-date">
+    <a href="/zt20xx/zt20xx.github.io/2024/10/19/kernel-gdb%E8%B0%83%E8%AF%95-%E5%BA%8F/" class="article-date">
   <time class="dt-published" datetime="2024-10-19T10:23:09.000Z" itemprop="datePublished">2024-10-19</time>
 </a>
     
@@ -100,11 +100,11 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2024/10/19/kernel-gdb%E8%B0%83%E8%AF%95-%E5%BA%8F/" data-id="cm2g1cysq0000ps7ofmtwcqg2" data-title="kernel-gdb调试-序" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://github.com/zt20xx/zt20xx.github.io/2024/10/19/kernel-gdb%E8%B0%83%E8%AF%95-%E5%BA%8F/" data-id="cm2g1cysq0000ps7ofmtwcqg2" data-title="kernel-gdb调试-序" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kernel/" rel="tag">kernel</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/zt20xx/zt20xx.github.io/tags/kernel/" rel="tag">kernel</a></li></ul>
 
     </footer>
   </div>
@@ -112,7 +112,7 @@
     
 <nav id="article-nav">
   
-    <a href="/2024/10/19/pwn-%E5%87%BA%E9%A2%98-heap-base/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/zt20xx/zt20xx.github.io/2024/10/19/pwn-%E5%87%BA%E9%A2%98-heap-base/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption">前一篇</strong>
       <div class="article-nav-title">
         
@@ -122,7 +122,7 @@
     </a>
   
   
-    <a href="/2024/10/19/kernel-%E5%87%BA%E9%A2%98-Double-Fetch/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/zt20xx/zt20xx.github.io/2024/10/19/kernel-%E5%87%BA%E9%A2%98-Double-Fetch/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">后一篇</strong>
       <div class="article-nav-title">kernel-出题-Double_Fetch</div>
     </a>
@@ -144,7 +144,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/kernel/" rel="tag">kernel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pwn/" rel="tag">pwn</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/zt20xx/zt20xx.github.io/tags/kernel/" rel="tag">kernel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/zt20xx/zt20xx.github.io/tags/pwn/" rel="tag">pwn</a></li></ul>
     </div>
   </div>
 
@@ -154,7 +154,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/kernel/" style="font-size: 10px;">kernel</a> <a href="/tags/pwn/" style="font-size: 20px;">pwn</a>
+      <a href="/zt20xx/zt20xx.github.io/tags/kernel/" style="font-size: 10px;">kernel</a> <a href="/zt20xx/zt20xx.github.io/tags/pwn/" style="font-size: 20px;">pwn</a>
     </div>
   </div>
 
@@ -163,7 +163,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/10/">十月 2024</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/zt20xx/zt20xx.github.io/archives/2024/10/">十月 2024</a></li></ul>
     </div>
   </div>
 
@@ -176,23 +176,23 @@
       <ul>
         
           <li>
-            <a href="/2024/10/19/pwn-%E5%87%BA%E9%A2%98-win-ret2dll/">pwn-出题-win-ret2dll</a>
+            <a href="/zt20xx/zt20xx.github.io/2024/10/19/pwn-%E5%87%BA%E9%A2%98-win-ret2dll/">pwn-出题-win-ret2dll</a>
           </li>
         
           <li>
-            <a href="/2024/10/19/pwn-%E5%87%BA%E9%A2%98-win-ret2text/">pwn-出题-win-ret2text</a>
+            <a href="/zt20xx/zt20xx.github.io/2024/10/19/pwn-%E5%87%BA%E9%A2%98-win-ret2text/">pwn-出题-win-ret2text</a>
           </li>
         
           <li>
-            <a href="/2024/10/19/pwn-%E5%87%BA%E9%A2%98-heap-base/">pwn-出题-heap-base</a>
+            <a href="/zt20xx/zt20xx.github.io/2024/10/19/pwn-%E5%87%BA%E9%A2%98-heap-base/">pwn-出题-heap-base</a>
           </li>
         
           <li>
-            <a href="/2024/10/19/kernel-gdb%E8%B0%83%E8%AF%95-%E5%BA%8F/">kernel-gdb调试-序</a>
+            <a href="/zt20xx/zt20xx.github.io/2024/10/19/kernel-gdb%E8%B0%83%E8%AF%95-%E5%BA%8F/">kernel-gdb调试-序</a>
           </li>
         
           <li>
-            <a href="/2024/10/19/kernel-%E5%87%BA%E9%A2%98-Double-Fetch/">kernel-出题-Double_Fetch</a>
+            <a href="/zt20xx/zt20xx.github.io/2024/10/19/kernel-%E5%87%BA%E9%A2%98-Double-Fetch/">kernel-出题-Double_Fetch</a>
           </li>
         
       </ul>
@@ -217,25 +217,25 @@
     </div>
     <nav id="mobile-nav">
   
-    <a href="/" class="mobile-nav-link">Home</a>
+    <a href="/zt20xx/zt20xx.github.io/" class="mobile-nav-link">Home</a>
   
-    <a href="/archives" class="mobile-nav-link">Archives</a>
+    <a href="/zt20xx/zt20xx.github.io/archives" class="mobile-nav-link">Archives</a>
   
 </nav>
     
 
 
-<script src="/js/jquery-3.6.4.min.js"></script>
+<script src="/zt20xx/zt20xx.github.io/js/jquery-3.6.4.min.js"></script>
 
 
 
   
-<script src="/fancybox/jquery.fancybox.min.js"></script>
+<script src="/zt20xx/zt20xx.github.io/fancybox/jquery.fancybox.min.js"></script>
 
 
 
 
-<script src="/js/script.js"></script>
+<script src="/zt20xx/zt20xx.github.io/js/script.js"></script>
 
 
 
