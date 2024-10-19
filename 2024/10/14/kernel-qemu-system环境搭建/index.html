@@ -9,7 +9,7 @@
   <meta name="description" content="等之后再完善相关操作吧 kernel由于调试需要（电脑很菜），保持了最小的内核开启选项(串口打印输出设置，没有音频等)，配合busybox不到1s就可以启动至少保持以下选项开启 123CONFIG_DEVTMPFS_MOUNT 允许使用设备文件系统,使得系统启动时自动创建设备文件如&#x2F;dev&#x2F;nullCONFIG_MODULE_FORCE_LOAD 强制加载驱动CONFIG_SMP  多线程 文件系">
 <meta property="og:type" content="article">
 <meta property="og:title" content="kernel-qemu-system环境搭建">
-<meta property="og:url" content="https://github.com/zt20xx/zt20xx.github.io/2024/10/14/kernel-qemu-system%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/index.html">
+<meta property="og:url" content="https://zt20xx.github.io/2024/10/14/kernel-qemu-system%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/index.html">
 <meta property="og:site_name" content="zt20xx">
 <meta property="og:description" content="等之后再完善相关操作吧 kernel由于调试需要（电脑很菜），保持了最小的内核开启选项(串口打印输出设置，没有音频等)，配合busybox不到1s就可以启动至少保持以下选项开启 123CONFIG_DEVTMPFS_MOUNT 允许使用设备文件系统,使得系统启动时自动创建设备文件如&#x2F;dev&#x2F;nullCONFIG_MODULE_FORCE_LOAD 强制加载驱动CONFIG_SMP  多线程 文件系">
 <meta property="og:locale" content="zh_CN">
@@ -19,18 +19,18 @@
 <meta property="article:tag" content="kernel">
 <meta name="twitter:card" content="summary">
   
-    <link rel="alternate" href="/zt20xx/zt20xx.github.io/atom.xml" title="zt20xx" type="application/atom+xml">
+    <link rel="alternate" href="/atom.xml" title="zt20xx" type="application/atom+xml">
   
   
-    <link rel="shortcut icon" href="/zt20xx/zt20xx.github.io/favicon.png">
+    <link rel="shortcut icon" href="/favicon.png">
   
   
   
-<link rel="stylesheet" href="/zt20xx/zt20xx.github.io/css/style.css">
+<link rel="stylesheet" href="/css/style.css">
 
   
     
-<link rel="stylesheet" href="/zt20xx/zt20xx.github.io/fancybox/jquery.fancybox.min.css">
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
 
   
   
@@ -44,7 +44,7 @@
   <div id="header-outer" class="outer">
     <div id="header-title" class="inner">
       <h1 id="logo-wrap">
-        <a href="/zt20xx/zt20xx.github.io/" id="logo">zt20xx</a>
+        <a href="/" id="logo">zt20xx</a>
       </h1>
       
     </div>
@@ -52,20 +52,20 @@
       <nav id="main-nav">
         <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
         
-          <a class="main-nav-link" href="/zt20xx/zt20xx.github.io/">Home</a>
+          <a class="main-nav-link" href="/">Home</a>
         
-          <a class="main-nav-link" href="/zt20xx/zt20xx.github.io/archives">Archives</a>
+          <a class="main-nav-link" href="/archives">Archives</a>
         
       </nav>
       <nav id="sub-nav">
         
         
-          <a class="nav-icon" href="/zt20xx/zt20xx.github.io/atom.xml" title="RSS 订阅"><span class="fa fa-rss"></span></a>
+          <a class="nav-icon" href="/atom.xml" title="RSS 订阅"><span class="fa fa-rss"></span></a>
         
         <a class="nav-icon nav-search-btn" title="搜索"><span class="fa fa-search"></span></a>
       </nav>
       <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://github.com/zt20xx/zt20xx.github.io"></form>
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://zt20xx.github.io"></form>
       </div>
     </div>
   </div>
@@ -74,7 +74,7 @@
       <div class="outer">
         <section id="main"><article id="post-kernel-qemu-system环境搭建" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
-    <a href="/zt20xx/zt20xx.github.io/2024/10/14/kernel-qemu-system%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" class="article-date">
+    <a href="/2024/10/14/kernel-qemu-system%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" class="article-date">
   <time class="dt-published" datetime="2024-10-14T14:30:49.000Z" itemprop="datePublished">2024-10-14</time>
 </a>
     
@@ -99,17 +99,17 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">CONFIG_DEVTMPFS_MOUNT 允许使用设备文件系统,使得系统启动时自动创建设备文件如/dev/null</span><br><span class="line">CONFIG_MODULE_FORCE_LOAD 强制加载驱动</span><br><span class="line">CONFIG_SMP  多线程</span><br></pre></td></tr></table></figure>
 <h1 id="文件系统"><a href="#文件系统" class="headerlink" title="文件系统"></a>文件系统</h1><h2 id="busybox"><a href="#busybox" class="headerlink" title="busybox"></a>busybox</h2><p>没有比busybox启动更快的方法了</p>
 <h2 id="buildroot"><a href="#buildroot" class="headerlink" title="buildroot"></a>buildroot</h2><p>最定制的方法，busybox虽然快，但是没有基本的工具，安装工具也特别麻烦，可以使用buildroot将工具编译进去</p>
-<h2 id="debootstrap"><a href="#debootstrap" class="headerlink" title="debootstrap"></a>debootstrap</h2><p>buildroot虽然将工具编译进去了，但是再向里面添加工具就比较麻烦，使用debootstrap就可以持续地使用apt安装新的工具<br><a href="https://github.com/google/syzkaller/blob/master/tools/create-image.sh">https://github.com/google/syzkaller/blob/master/tools/create-image.sh</a></p>
+<h2 id="debootstrap"><a href="#debootstrap" class="headerlink" title="debootstrap"></a>debootstrap</h2><p>buildroot虽然将工具编译进去了，但是再向里面添加工具就比较麻烦，使用debootstrap就可以持续地使用apt安装新的工具<br><a target="_blank" rel="noopener" href="https://github.com/google/syzkaller/blob/master/tools/create-image.sh">https://github.com/google/syzkaller/blob/master/tools/create-image.sh</a></p>
 <h2 id="debian云镜像"><a href="#debian云镜像" class="headerlink" title="debian云镜像"></a>debian云镜像</h2><p>直接获得一个隔离的环境，不过这样需要自己编译并安装内核，然后将内核复制出来，否则怎么调试内核呢？<br><a target="_blank" rel="noopener" href="https://cloud.debian.org/images/cloud">https://cloud.debian.org/images/cloud</a></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://github.com/zt20xx/zt20xx.github.io/2024/10/14/kernel-qemu-system%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" data-id="cm2943ggq0006vg7o7gpvh0nf" data-title="kernel-qemu-system环境搭建" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://zt20xx.github.io/2024/10/14/kernel-qemu-system%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" data-id="cm2943ggq0006vg7o7gpvh0nf" data-title="kernel-qemu-system环境搭建" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/zt20xx/zt20xx.github.io/tags/kernel/" rel="tag">kernel</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kernel/" rel="tag">kernel</a></li></ul>
 
     </footer>
   </div>
@@ -117,7 +117,7 @@
     
 <nav id="article-nav">
   
-    <a href="/zt20xx/zt20xx.github.io/2024/10/15/pwn-%E5%87%BA%E9%A2%98-ret2text/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2024/10/15/pwn-%E5%87%BA%E9%A2%98-ret2text/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption">前一篇</strong>
       <div class="article-nav-title">
         
@@ -127,7 +127,7 @@
     </a>
   
   
-    <a href="/zt20xx/zt20xx.github.io/2024/10/14/pwn-got%E4%B8%8Eplt/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2024/10/14/pwn-got%E4%B8%8Eplt/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">后一篇</strong>
       <div class="article-nav-title">pwn-got与plt</div>
     </a>
@@ -149,7 +149,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/zt20xx/zt20xx.github.io/tags/kernel/" rel="tag">kernel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/zt20xx/zt20xx.github.io/tags/pwn/" rel="tag">pwn</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/kernel/" rel="tag">kernel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pwn/" rel="tag">pwn</a></li></ul>
     </div>
   </div>
 
@@ -159,7 +159,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/zt20xx/zt20xx.github.io/tags/kernel/" style="font-size: 10px;">kernel</a> <a href="/zt20xx/zt20xx.github.io/tags/pwn/" style="font-size: 20px;">pwn</a>
+      <a href="/tags/kernel/" style="font-size: 10px;">kernel</a> <a href="/tags/pwn/" style="font-size: 20px;">pwn</a>
     </div>
   </div>
 
@@ -168,7 +168,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/zt20xx/zt20xx.github.io/archives/2024/10/">十月 2024</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/10/">十月 2024</a></li></ul>
     </div>
   </div>
 
@@ -181,23 +181,23 @@
       <ul>
         
           <li>
-            <a href="/zt20xx/zt20xx.github.io/2024/10/19/pwn-%E5%87%BA%E9%A2%98-win-ret2dll/">pwn-出题-win-ret2dll</a>
+            <a href="/2024/10/19/pwn-%E5%87%BA%E9%A2%98-win-ret2dll/">pwn-出题-win-ret2dll</a>
           </li>
         
           <li>
-            <a href="/zt20xx/zt20xx.github.io/2024/10/19/pwn-%E5%87%BA%E9%A2%98-win-ret2text/">pwn-出题-win-ret2text</a>
+            <a href="/2024/10/19/pwn-%E5%87%BA%E9%A2%98-win-ret2text/">pwn-出题-win-ret2text</a>
           </li>
         
           <li>
-            <a href="/zt20xx/zt20xx.github.io/2024/10/19/pwn-%E5%87%BA%E9%A2%98-heap-base/">pwn-出题-heap-base</a>
+            <a href="/2024/10/19/pwn-%E5%87%BA%E9%A2%98-heap-base/">pwn-出题-heap-base</a>
           </li>
         
           <li>
-            <a href="/zt20xx/zt20xx.github.io/2024/10/19/kernel-gdb%E8%B0%83%E8%AF%95-%E5%BA%8F/">kernel-gdb调试-序</a>
+            <a href="/2024/10/19/kernel-gdb%E8%B0%83%E8%AF%95-%E5%BA%8F/">kernel-gdb调试-序</a>
           </li>
         
           <li>
-            <a href="/zt20xx/zt20xx.github.io/2024/10/19/kernel-%E5%87%BA%E9%A2%98-Double-Fetch/">kernel-出题-Double_Fetch</a>
+            <a href="/2024/10/19/kernel-%E5%87%BA%E9%A2%98-Double-Fetch/">kernel-出题-Double_Fetch</a>
           </li>
         
       </ul>
@@ -222,25 +222,25 @@
     </div>
     <nav id="mobile-nav">
   
-    <a href="/zt20xx/zt20xx.github.io/" class="mobile-nav-link">Home</a>
+    <a href="/" class="mobile-nav-link">Home</a>
   
-    <a href="/zt20xx/zt20xx.github.io/archives" class="mobile-nav-link">Archives</a>
+    <a href="/archives" class="mobile-nav-link">Archives</a>
   
 </nav>
     
 
 
-<script src="/zt20xx/zt20xx.github.io/js/jquery-3.6.4.min.js"></script>
+<script src="/js/jquery-3.6.4.min.js"></script>
 
 
 
   
-<script src="/zt20xx/zt20xx.github.io/fancybox/jquery.fancybox.min.js"></script>
+<script src="/fancybox/jquery.fancybox.min.js"></script>
 
 
 
 
-<script src="/zt20xx/zt20xx.github.io/js/script.js"></script>
+<script src="/js/script.js"></script>
 
 
 
