@@ -6,15 +6,15 @@
   
   <title>kernel-qemu-system环境搭建 | zt20xx</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="等之后再完善相关操作吧 busybox没有比busybox启动更快的方法了 buildroot最定制的方法，busybox虽然快，但是没有基本的工具，安装工具也特别麻烦，可以使用buildroot将工具编译进去 debootstrapbuildroot虽然将工具编译进去了，但是再向里面添加工具就比较麻烦，使用debootstrap就可以持续地使用apt安装新的工具https:&#x2F;&#x2F;github.co">
+  <meta name="description" content="等之后再完善相关操作吧 kernel由于调试需要（电脑很菜），保持了最小的内核开启选项(串口打印输出设置，没有音频等)，配合busybox不到1s就可以启动至少保持以下选项开启 123CONFIG_DEVTMPFS_MOUNT 允许使用设备文件系统,使得系统启动时自动创建设备文件如&#x2F;dev&#x2F;nullCONFIG_MODULE_FORCE_LOAD 强制加载驱动CONFIG_SMP  多线程 文件系">
 <meta property="og:type" content="article">
 <meta property="og:title" content="kernel-qemu-system环境搭建">
 <meta property="og:url" content="http://example.com/2024/10/14/kernel-qemu-system%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/index.html">
 <meta property="og:site_name" content="zt20xx">
-<meta property="og:description" content="等之后再完善相关操作吧 busybox没有比busybox启动更快的方法了 buildroot最定制的方法，busybox虽然快，但是没有基本的工具，安装工具也特别麻烦，可以使用buildroot将工具编译进去 debootstrapbuildroot虽然将工具编译进去了，但是再向里面添加工具就比较麻烦，使用debootstrap就可以持续地使用apt安装新的工具https:&#x2F;&#x2F;github.co">
+<meta property="og:description" content="等之后再完善相关操作吧 kernel由于调试需要（电脑很菜），保持了最小的内核开启选项(串口打印输出设置，没有音频等)，配合busybox不到1s就可以启动至少保持以下选项开启 123CONFIG_DEVTMPFS_MOUNT 允许使用设备文件系统,使得系统启动时自动创建设备文件如&#x2F;dev&#x2F;nullCONFIG_MODULE_FORCE_LOAD 强制加载驱动CONFIG_SMP  多线程 文件系">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-10-14T14:30:49.000Z">
-<meta property="article:modified_time" content="2024-10-19T10:57:08.232Z">
+<meta property="article:modified_time" content="2024-10-19T12:08:33.181Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="kernel">
 <meta name="twitter:card" content="summary">
@@ -95,10 +95,12 @@
     <div class="e-content article-entry" itemprop="articleBody">
       
         <p>等之后再完善相关操作吧</p>
-<h1 id="busybox"><a href="#busybox" class="headerlink" title="busybox"></a>busybox</h1><p>没有比busybox启动更快的方法了</p>
-<h1 id="buildroot"><a href="#buildroot" class="headerlink" title="buildroot"></a>buildroot</h1><p>最定制的方法，busybox虽然快，但是没有基本的工具，安装工具也特别麻烦，可以使用buildroot将工具编译进去</p>
-<h1 id="debootstrap"><a href="#debootstrap" class="headerlink" title="debootstrap"></a>debootstrap</h1><p>buildroot虽然将工具编译进去了，但是再向里面添加工具就比较麻烦，使用debootstrap就可以持续地使用apt安装新的工具<br><a target="_blank" rel="noopener" href="https://github.com/google/syzkaller/blob/master/tools/create-image.sh">https://github.com/google/syzkaller/blob/master/tools/create-image.sh</a></p>
-<h1 id="debian云镜像"><a href="#debian云镜像" class="headerlink" title="debian云镜像"></a>debian云镜像</h1><p>直接获得一个隔离的环境，不过这样需要自己编译并安装内核，然后将内核复制出来，否则怎么调试内核呢？<br><a target="_blank" rel="noopener" href="https://cloud.debian.org/images/cloud">https://cloud.debian.org/images/cloud</a></p>
+<h1 id="kernel"><a href="#kernel" class="headerlink" title="kernel"></a>kernel</h1><p>由于调试需要（电脑很菜），保持了最小的内核开启选项(串口打印输出设置，没有音频等)，配合busybox不到1s就可以启动<br>至少保持以下选项开启</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">CONFIG_DEVTMPFS_MOUNT 允许使用设备文件系统,使得系统启动时自动创建设备文件如/dev/null</span><br><span class="line">CONFIG_MODULE_FORCE_LOAD 强制加载驱动</span><br><span class="line">CONFIG_SMP  多线程</span><br></pre></td></tr></table></figure>
+<h1 id="文件系统"><a href="#文件系统" class="headerlink" title="文件系统"></a>文件系统</h1><h2 id="busybox"><a href="#busybox" class="headerlink" title="busybox"></a>busybox</h2><p>没有比busybox启动更快的方法了</p>
+<h2 id="buildroot"><a href="#buildroot" class="headerlink" title="buildroot"></a>buildroot</h2><p>最定制的方法，busybox虽然快，但是没有基本的工具，安装工具也特别麻烦，可以使用buildroot将工具编译进去</p>
+<h2 id="debootstrap"><a href="#debootstrap" class="headerlink" title="debootstrap"></a>debootstrap</h2><p>buildroot虽然将工具编译进去了，但是再向里面添加工具就比较麻烦，使用debootstrap就可以持续地使用apt安装新的工具<br><a target="_blank" rel="noopener" href="https://github.com/google/syzkaller/blob/master/tools/create-image.sh">https://github.com/google/syzkaller/blob/master/tools/create-image.sh</a></p>
+<h2 id="debian云镜像"><a href="#debian云镜像" class="headerlink" title="debian云镜像"></a>debian云镜像</h2><p>直接获得一个隔离的环境，不过这样需要自己编译并安装内核，然后将内核复制出来，否则怎么调试内核呢？<br><a target="_blank" rel="noopener" href="https://cloud.debian.org/images/cloud">https://cloud.debian.org/images/cloud</a></p>
 
       
     </div>
