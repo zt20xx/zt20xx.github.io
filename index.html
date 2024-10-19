@@ -69,6 +69,93 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-序列自动机" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/10/19/%E5%BA%8F%E5%88%97%E8%87%AA%E5%8A%A8%E6%9C%BA/" class="article-date">
+  <time class="dt-published" datetime="2024-10-19T14:50:28.000Z" itemprop="datePublished">2024-10-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/10/19/%E5%BA%8F%E5%88%97%E8%87%AA%E5%8A%A8%E6%9C%BA/">序列自动机</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>子序列和子字符串不同，子字符串要求连续，子序列不要求连续，但要求出现顺序一致。<br>例如ace是abcde的子序列，而aec不是</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">tmp_max=6</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">s=&quot;ebcd&quot;</span><br><span class="line">t=&#x27;ecbdacbad&#x27;</span><br><span class="line"># 验证s是否为t的子序列不要求连续，但要求出现顺序一致。</span><br><span class="line"># 例如ace是abcde的子序列，而aec不是</span><br><span class="line">next=[[0 for i in range(tmp_max)] for j in range(len(t)+2)]</span><br><span class="line"># i为t的对应下标</span><br><span class="line"># j为s的对应元素相对&#x27;a&#x27;的偏移</span><br><span class="line"># 其值是本元素在j中的下标+1，也是下一个元素的j起始计算坐标</span><br><span class="line">next[0][4]=1# 下标+1</span><br><span class="line">next[1][1]=3</span><br><span class="line">next[3][2]=6</span><br><span class="line">next[6][3]=9# d的下标+1</span><br><span class="line">&#x27;&#x27;&#x27;</span><br><span class="line">ebcd</span><br><span class="line">ecbdacbad</span><br><span class="line">012345678</span><br><span class="line">&#x27;&#x27;&#x27;</span><br><span class="line">def check(next):</span><br><span class="line">    pos=0</span><br><span class="line">    for i in range(len(s)):</span><br><span class="line">        pos=next[pos][ord(s[i])-ord(&#x27;a&#x27;)]</span><br><span class="line">        if pos==0:</span><br><span class="line">            return False</span><br><span class="line">    return True</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def show(next):</span><br><span class="line">    for i in next:</span><br><span class="line">        print(i)</span><br><span class="line">    print(&#x27;=======&#x27;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def create():</span><br><span class="line">    next=[[0 for i in range(tmp_max)] for j in range(len(t)+2)]</span><br><span class="line">    for i in range(len(t)-1,-1,-1):</span><br><span class="line">        next[i+1][ord(t[i])-ord(&#x27;a&#x27;)]=i+1</span><br><span class="line">        for j in range(tmp_max):</span><br><span class="line">            next[i][j]=next[i+1][j]</span><br><span class="line">        # 在t的index+1处写入index的值，值为index+1</span><br><span class="line">        # 然后通过next[i][j]=next[i+1][j]</span><br><span class="line">        # 将index=1的值,赋值到index</span><br><span class="line">        # 复制后next[t_index][s_offset]=index+1</span><br><span class="line">    return next</span><br><span class="line">&#x27;&#x27;&#x27;</span><br><span class="line">ebcd</span><br><span class="line">ecbdacbad</span><br><span class="line">012345678</span><br><span class="line">&#x27;&#x27;&#x27;</span><br><span class="line"># 核心逻辑是check,create只是将所有结果存表</span><br><span class="line"># 那么check如何不会误解，错解</span><br><span class="line"># check根据s的值跳转，只要最后不为0即可</span><br><span class="line">show(next)</span><br><span class="line">print(check(next))</span><br><span class="line">show(create())</span><br><span class="line">print(check(create()))</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://zt20xx.github.io/2024/10/19/%E5%BA%8F%E5%88%97%E8%87%AA%E5%8A%A8%E6%9C%BA/" data-id="cm2ga9fjx0001kk7o1a3hb8v2" data-title="序列自动机" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%9D%82%E9%A1%B9/" rel="tag">杂项</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-systemtap" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/10/19/systemtap/" class="article-date">
+  <time class="dt-published" datetime="2024-10-19T14:31:36.000Z" itemprop="datePublished">2024-10-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/10/19/systemtap/">systemtap</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>内核需要开启kprobe,modules(好像还有什么，忘了，标记一下)<br>下载：<a target="_blank" rel="noopener" href="https://sourceware.org/systemtap/ftp/releases/">https://sourceware.org/systemtap/ftp/releases/</a><br>教程：<a target="_blank" rel="noopener" href="https://sourceware.org/systemtap/SystemTap_Beginners_Guide/">https://sourceware.org/systemtap/SystemTap_Beginners_Guide/</a><br>execname()很好用，但实际编译太慢，目前更倾向gdb</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://zt20xx.github.io/2024/10/19/systemtap/" data-id="cm2ga9fju0000kk7of89h06y1" data-title="systemtap" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%90%81%E7%BD%AE/" rel="tag">搁置</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%AE%B0%E5%BD%95%E4%B8%A2%E5%A4%B1/" rel="tag">记录丢失</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-pwn-出题-win-ret2dll" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2024/10/19/pwn-%E5%87%BA%E9%A2%98-win-ret2dll/" class="article-date">
@@ -414,6 +501,13 @@
 <h2 id="buildroot"><a href="#buildroot" class="headerlink" title="buildroot"></a>buildroot</h2><p>最定制的方法，busybox虽然快，但是没有基本的工具，安装工具也特别麻烦，可以使用buildroot将工具编译进去</p>
 <h2 id="debootstrap"><a href="#debootstrap" class="headerlink" title="debootstrap"></a>debootstrap</h2><p>buildroot虽然将工具编译进去了，但是再向里面添加工具就比较麻烦，使用debootstrap就可以持续地使用apt安装新的工具<br><a target="_blank" rel="noopener" href="https://github.com/google/syzkaller/blob/master/tools/create-image.sh">https://github.com/google/syzkaller/blob/master/tools/create-image.sh</a></p>
 <h2 id="debian云镜像"><a href="#debian云镜像" class="headerlink" title="debian云镜像"></a>debian云镜像</h2><p>直接获得一个隔离的环境，不过这样需要自己编译并安装内核，然后将内核复制出来，否则怎么调试内核呢？<br><a target="_blank" rel="noopener" href="https://cloud.debian.org/images/cloud">https://cloud.debian.org/images/cloud</a></p>
+<h1 id="用户分享"><a href="#用户分享" class="headerlink" title="用户分享"></a>用户分享</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">new:</span><br><span class="line">https://people.debian.org/~gio/dqib/</span><br><span class="line">2018(4.9;4.14,4.15):</span><br><span class="line">https://people.debian.org/~jcowgill/qemu-mips/</span><br><span class="line">old:</span><br><span class="line">https://people.debian.org/~aurel32/qemu/</span><br></pre></td></tr></table></figure>
+<h1 id="qemu-system启动配置"><a href="#qemu-system启动配置" class="headerlink" title="qemu-system启动配置"></a>qemu-system启动配置</h1><h2 id="共享文件夹"><a href="#共享文件夹" class="headerlink" title="共享文件夹"></a>共享文件夹</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-virtfs local,path=./share,mount_tag=shared_mount,security_model=none,id=shared_folder</span><br></pre></td></tr></table></figure>
+<p>内核需要支持9p</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo mount -t 9p -o trans=virtio shared_mount /mnt/shared</span><br></pre></td></tr></table></figure>
+
+
+
 
       
     </div>
@@ -432,112 +526,12 @@
 
 
   
-    <article id="post-pwn-got与plt" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2024/10/14/pwn-got%E4%B8%8Eplt/" class="article-date">
-  <time class="dt-published" datetime="2024-10-14T12:59:28.000Z" itemprop="datePublished">2024-10-14</time>
-</a>
+
+
+  <nav id="page-nav">
     
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2024/10/14/pwn-got%E4%B8%8Eplt/">pwn-got与plt</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h1 id="如何查看函数的got与plt地址"><a href="#如何查看函数的got与plt地址" class="headerlink" title="如何查看函数的got与plt地址"></a>如何查看函数的got与plt地址</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">x/gx &amp;&#x27;atoi@got.plt&#x27;</span><br><span class="line">x/gx &amp;&#x27;atoi@plt&#x27;</span><br><span class="line">x/gx &amp;&#x27;atoi&#x27;</span><br></pre></td></tr></table></figure>
-<h1 id="got表与plt表有什么关系（以atoi为例）"><a href="#got表与plt表有什么关系（以atoi为例）" class="headerlink" title="got表与plt表有什么关系（以atoi为例）"></a>got表与plt表有什么关系（以atoi为例）</h1><p>我们先看看pwntools是如何处理的</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">elf.got[&quot;atoi&quot;]: 0x404018 </span><br><span class="line">elf.plt[&quot;atoi&quot;]: 0x401060 </span><br></pre></td></tr></table></figure>
-<p>函数未调用之前，关系如下</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">0x404018 &lt;atoi@got.plt&gt;:        0x0000000000401066</span><br><span class="line">0x401060 &lt;atoi@plt&gt;:    0x036800002fb225ff</span><br><span class="line">0x7ffff7e08920 &lt;__GI_atoi&gt;:     0x00000aba08ec8348</span><br></pre></td></tr></table></figure>
-<p>可以看到<br><code>.got[&quot;atoi&quot;]</code>就是<code>&amp;&#39;atoi@got.plt&#39;</code>就是got的地址<br><code>.plt[&quot;atoi&quot;]</code>就是<code>&amp;&#39;atoi@plt&#39;</code>就是plt的地址</p>
-<p>函数在被调用时会跳转到plt (<code>call   0x401060 &lt;atoi@plt&gt;</code>)</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(gdb) x/3i 0x401060</span><br><span class="line">   0x401060 &lt;atoi@plt&gt;: jmp    *0x2fb2(%rip)        # 0x404018 &lt;atoi@got.plt&gt;</span><br><span class="line">   0x401066 &lt;atoi@plt+6&gt;:       push   $0x3</span><br><span class="line">   0x40106b &lt;atoi@plt+11&gt;:      jmp    0x401020</span><br></pre></td></tr></table></figure>
-<p>可以看到程序会先去到got表处运行，然后（在函数未被调用的情况下）又跳转回来(0x401066)继续运行，这个继续运行的东西就是延迟绑定。这个绑定会将got的值改为实际函数地址，从而不会再次运行延时绑定。<br>如下所示</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">0x404018 &lt;atoi@got.plt&gt;:        0x00007ffff7e08920</span><br><span class="line">0x401060 &lt;atoi@plt&gt;:    0x036800002fb225ff</span><br><span class="line">0x7ffff7e08920 &lt;__GI_atoi&gt;:     0x00000aba08ec8348</span><br></pre></td></tr></table></figure>
-
-<p>所以在函数未被调用时，泄露got的值就是plt的地址+0x6(elf.plt[“atoi”]: 0x401060)好像也没有任何意义，这和lib中的偏移没有任何关系。</p>
-<p>综上，在延迟绑定后函数调用关系如下</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">call atoi-&gt;plt-&gt;got-&gt;atoi</span><br><span class="line">call   0x401060 &lt;atoi@plt&gt;</span><br><span class="line">0x401060 &lt;atoi@plt&gt;: jmp    *0x2fb2(%rip)        # 0x404018 &lt;atoi@got.plt&gt;</span><br><span class="line">上面一行等价于jmp 0x00007ffff7e08920</span><br></pre></td></tr></table></figure>
-
-<h1 id="如何开启或者关闭延迟绑定"><a href="#如何开启或者关闭延迟绑定" class="headerlink" title="如何开启或者关闭延迟绑定"></a>如何开启或者关闭延迟绑定</h1><p>延迟绑定默认开启<br>使用-Wl,-z,now就会关闭延迟绑定，使用非延迟绑定<br>使用-Wl,-z,lazy显式开启延迟绑定</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://zt20xx.github.io/2024/10/14/pwn-got%E4%B8%8Eplt/" data-id="cm292xuyz0004vg7oc34wa1ss" data-title="pwn-got与plt" class="article-share-link"><span class="fa fa-share">分享</span></a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pwn/" rel="tag">pwn</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-pwn-局部变量" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2024/10/14/pwn-%E5%B1%80%E9%83%A8%E5%8F%98%E9%87%8F/" class="article-date">
-  <time class="dt-published" datetime="2024-10-14T12:32:02.000Z" itemprop="datePublished">2024-10-14</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2024/10/14/pwn-%E5%B1%80%E9%83%A8%E5%8F%98%E9%87%8F/">pwn-局部变量</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>局部变量就是在{}里面才生效的变量，<br>示例</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">test_a</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">        <span class="type">int</span> a=<span class="number">1</span>;</span><br><span class="line">        <span class="type">int</span> b=<span class="number">2</span>;</span><br><span class="line">        <span class="comment">//在函数里面有效的局部变量</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i=<span class="number">0</span>;i&lt;<span class="number">3</span>;i++)&#123;&#125;</span><br><span class="line">        <span class="comment">//循环里面的局部变量，只在循环里面有效在 ,c99支持</span></span><br><span class="line">        &#123;<span class="type">int</span> c=<span class="number">4</span>;&#125;</span><br><span class="line">        <span class="comment">//这也是局部变量，只在这个&#123;&#125;里面有效</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>如果我们在其作用域外打印，就会出现报错</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">test_a</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">        <span class="type">int</span> a=<span class="number">1</span>;</span><br><span class="line">        <span class="type">int</span> b=<span class="number">2</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i=<span class="number">0</span>;i&lt;<span class="number">3</span>;i++)&#123;&#125;</span><br><span class="line">        &#123;<span class="type">int</span> c=<span class="number">4</span>;&#125;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;%d,%d,%d\n&quot;</span>,a,i,c);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">t.c:<span class="number">7</span>:<span class="number">31</span>: error: ‘i’ undeclared (first use in this function)</span><br><span class="line">    <span class="number">7</span> |         <span class="built_in">printf</span>(<span class="string">&quot;%d,%d,%d\n&quot;</span>,a,i,c);</span><br><span class="line">      |                               ^</span><br><span class="line">t.c:<span class="number">7</span>:<span class="number">31</span>: note: each undeclared identifier is reported only once <span class="keyword">for</span> each function it appears in</span><br><span class="line">t.c:<span class="number">7</span>:<span class="number">33</span>: error: ‘c’ undeclared (first use in this function)</span><br><span class="line">    <span class="number">7</span> |         <span class="built_in">printf</span>(<span class="string">&quot;%d,%d,%d\n&quot;</span>,a,i,c);</span><br><span class="line">      |                                 ^</span><br></pre></td></tr></table></figure>
-
-<p>我们通过汇编看看，局部变量是如何工作的</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">(gdb) disassemble test_a        //可以使用set disassembly-flavor intel转换汇编格式</span><br><span class="line">Dump of assembler code for function test_a:</span><br><span class="line">   0x0000000000001129 &lt;+0&gt;:     push   %rbp //这个函数的rbp被放入栈</span><br><span class="line">   0x000000000000112a &lt;+1&gt;:     mov    %rsp,%rbp</span><br><span class="line">   0x000000000000112d &lt;+4&gt;:     movl   $0x1,-0x8(%rbp)//先定义的a</span><br><span class="line">   0x0000000000001134 &lt;+11&gt;:    movl   $0x2,-0xc(%rbp)//再定义的b，b放在a上面（高地址在下）</span><br><span class="line">   0x000000000000113b &lt;+18&gt;:    movl   $0x0,-0x4(%rbp)//for定义的i，gcc对其进行了特殊处理，在a下面（为什么呢？想想在for之前定义i会发生什么）</span><br><span class="line">   0x0000000000001142 &lt;+25&gt;:    jmp    0x1148 &lt;test_a+31&gt;</span><br><span class="line">   0x0000000000001144 &lt;+27&gt;:    addl   $0x1,-0x4(%rbp)</span><br><span class="line">   0x0000000000001148 &lt;+31&gt;:    cmpl   $0x2,-0x4(%rbp)</span><br><span class="line">   0x000000000000114c &lt;+35&gt;:    jle    0x1144 &lt;test_a+27&gt;</span><br><span class="line">   0x000000000000114e &lt;+37&gt;:    movl   $0x4,-0x10(%rbp)//最后在&#123;&#125;里面定义的c，在最上面（这样隔离最好）</span><br><span class="line">   0x0000000000001155 &lt;+44&gt;:    nop</span><br><span class="line">   0x0000000000001156 &lt;+45&gt;:    pop    %rbp</span><br><span class="line">   0x0000000000001157 &lt;+46&gt;:    ret</span><br><span class="line">End of assembler dump.</span><br></pre></td></tr></table></figure>
-<p>虽然a,b,c都是int类型，但根据汇编显然：<br>如果a可以被覆盖，需要0x8+0x8 （rbp+i+a）,到达返回地址<br>如果b可以被覆盖，需要0x8+0xc （rbp+i+a+b）,到达返回地址<br>如果c可以被覆盖，需要0x8+0x10（rbp+i+a+b+c）,到达返回地址<br>在pop rbp之前下断点，可以看到与上述一致的情况</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(gdb) x/4gx $rbp-0x10</span><br><span class="line">0x7fffffffdef0: 0x0000000200000004      0x0000000300000001</span><br><span class="line">0x7fffffffdf00: 0x00007fffffffdf10      0x0000555555555166</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://zt20xx.github.io/2024/10/14/pwn-%E5%B1%80%E9%83%A8%E5%8F%98%E9%87%8F/" data-id="cm28zup8n0001vg7o3yyp93vl" data-title="pwn-局部变量" class="article-share-link"><span class="fa fa-share">分享</span></a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pwn/" rel="tag">pwn</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">下一页 &raquo;</a>
+  </nav>
 
 </section>
         
@@ -550,7 +544,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/kernel/" rel="tag">kernel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pwn/" rel="tag">pwn</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/kernel/" rel="tag">kernel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pwn/" rel="tag">pwn</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%90%81%E7%BD%AE/" rel="tag">搁置</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9D%82%E9%A1%B9/" rel="tag">杂项</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AE%B0%E5%BD%95%E4%B8%A2%E5%A4%B1/" rel="tag">记录丢失</a></li></ul>
     </div>
   </div>
 
@@ -560,7 +554,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/kernel/" style="font-size: 10px;">kernel</a> <a href="/tags/pwn/" style="font-size: 20px;">pwn</a>
+      <a href="/tags/kernel/" style="font-size: 15px;">kernel</a> <a href="/tags/pwn/" style="font-size: 20px;">pwn</a> <a href="/tags/%E6%90%81%E7%BD%AE/" style="font-size: 10px;">搁置</a> <a href="/tags/%E6%9D%82%E9%A1%B9/" style="font-size: 10px;">杂项</a> <a href="/tags/%E8%AE%B0%E5%BD%95%E4%B8%A2%E5%A4%B1/" style="font-size: 10px;">记录丢失</a>
     </div>
   </div>
 
@@ -582,6 +576,14 @@
       <ul>
         
           <li>
+            <a href="/2024/10/19/%E5%BA%8F%E5%88%97%E8%87%AA%E5%8A%A8%E6%9C%BA/">序列自动机</a>
+          </li>
+        
+          <li>
+            <a href="/2024/10/19/systemtap/">systemtap</a>
+          </li>
+        
+          <li>
             <a href="/2024/10/19/pwn-%E5%87%BA%E9%A2%98-win-ret2dll/">pwn-出题-win-ret2dll</a>
           </li>
         
@@ -591,14 +593,6 @@
         
           <li>
             <a href="/2024/10/19/pwn-%E5%87%BA%E9%A2%98-heap-base/">pwn-出题-heap-base</a>
-          </li>
-        
-          <li>
-            <a href="/2024/10/19/kernel-gdb%E8%B0%83%E8%AF%95-%E5%BA%8F/">kernel-gdb调试-序</a>
-          </li>
-        
-          <li>
-            <a href="/2024/10/19/kernel-%E5%87%BA%E9%A2%98-Double-Fetch/">kernel-出题-Double_Fetch</a>
           </li>
         
       </ul>
