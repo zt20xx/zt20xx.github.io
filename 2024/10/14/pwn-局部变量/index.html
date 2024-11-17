@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>pwn-局部变量 | zt20xx</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="局部变量就是在{}里面才生效的变量，示例 12345678910void test_a()&#123;        int a&#x3D;1;        int b&#x3D;2;        &#x2F;&#x2F;在函数里面有效的局部变量        for (int i&#x3D;0;i&lt;3;i++)&#123;&#125;        &#x2F;&#x2F;循环里面的局部变量，只在循环里面有效在 ,c99支持        &#123;i">
+<meta property="og:type" content="article">
+<meta property="og:title" content="pwn-局部变量">
+<meta property="og:url" content="http://example.com/2024/10/14/pwn-%E5%B1%80%E9%83%A8%E5%8F%98%E9%87%8F/index.html">
+<meta property="og:site_name" content="zt20xx">
+<meta property="og:description" content="局部变量就是在{}里面才生效的变量，示例 12345678910void test_a()&#123;        int a&#x3D;1;        int b&#x3D;2;        &#x2F;&#x2F;在函数里面有效的局部变量        for (int i&#x3D;0;i&lt;3;i++)&#123;&#125;        &#x2F;&#x2F;循环里面的局部变量，只在循环里面有效在 ,c99支持        &#123;i">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-10-14T12:32:02.000Z">
+<meta property="article:modified_time" content="2024-11-17T07:24:56.173Z">
+<meta property="article:author" content="zt20xx">
+<meta property="article:tag" content="pwn">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="zt20xx" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">zt20xx</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS 订阅"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="搜索"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-pwn-局部变量" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/10/14/pwn-%E5%B1%80%E9%83%A8%E5%8F%98%E9%87%8F/" class="article-date">
+  <time class="dt-published" datetime="2024-10-14T12:32:02.000Z" itemprop="datePublished">2024-10-14</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      pwn-局部变量
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>局部变量就是在{}里面才生效的变量，<br>示例</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">test_a</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">        <span class="type">int</span> a=<span class="number">1</span>;</span><br><span class="line">        <span class="type">int</span> b=<span class="number">2</span>;</span><br><span class="line">        <span class="comment">//在函数里面有效的局部变量</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i=<span class="number">0</span>;i&lt;<span class="number">3</span>;i++)&#123;&#125;</span><br><span class="line">        <span class="comment">//循环里面的局部变量，只在循环里面有效在 ,c99支持</span></span><br><span class="line">        &#123;<span class="type">int</span> c=<span class="number">4</span>;&#125;</span><br><span class="line">        <span class="comment">//这也是局部变量，只在这个&#123;&#125;里面有效</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果我们在其作用域外打印，就会出现报错</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">test_a</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">        <span class="type">int</span> a=<span class="number">1</span>;</span><br><span class="line">        <span class="type">int</span> b=<span class="number">2</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i=<span class="number">0</span>;i&lt;<span class="number">3</span>;i++)&#123;&#125;</span><br><span class="line">        &#123;<span class="type">int</span> c=<span class="number">4</span>;&#125;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;%d,%d,%d\n&quot;</span>,a,i,c);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">t.c:<span class="number">7</span>:<span class="number">31</span>: error: ‘i’ undeclared (first use in this function)</span><br><span class="line">    <span class="number">7</span> |         <span class="built_in">printf</span>(<span class="string">&quot;%d,%d,%d\n&quot;</span>,a,i,c);</span><br><span class="line">      |                               ^</span><br><span class="line">t.c:<span class="number">7</span>:<span class="number">31</span>: note: each undeclared identifier is reported only once <span class="keyword">for</span> each function it appears in</span><br><span class="line">t.c:<span class="number">7</span>:<span class="number">33</span>: error: ‘c’ undeclared (first use in this function)</span><br><span class="line">    <span class="number">7</span> |         <span class="built_in">printf</span>(<span class="string">&quot;%d,%d,%d\n&quot;</span>,a,i,c);</span><br><span class="line">      |                                 ^</span><br></pre></td></tr></table></figure>
+
+<p>我们通过汇编看看，局部变量是如何工作的</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">(gdb) disassemble test_a        //可以使用set disassembly-flavor intel转换汇编格式</span><br><span class="line">Dump of assembler code for function test_a:</span><br><span class="line">   0x0000000000001129 &lt;+0&gt;:     push   %rbp //这个函数的rbp被放入栈</span><br><span class="line">   0x000000000000112a &lt;+1&gt;:     mov    %rsp,%rbp</span><br><span class="line">   0x000000000000112d &lt;+4&gt;:     movl   $0x1,-0x8(%rbp)//先定义的a</span><br><span class="line">   0x0000000000001134 &lt;+11&gt;:    movl   $0x2,-0xc(%rbp)//再定义的b，b放在a上面（高地址在下）</span><br><span class="line">   0x000000000000113b &lt;+18&gt;:    movl   $0x0,-0x4(%rbp)//for定义的i，gcc对其进行了特殊处理，在a下面（为什么呢？想想在for之前定义i会发生什么）</span><br><span class="line">   0x0000000000001142 &lt;+25&gt;:    jmp    0x1148 &lt;test_a+31&gt;</span><br><span class="line">   0x0000000000001144 &lt;+27&gt;:    addl   $0x1,-0x4(%rbp)</span><br><span class="line">   0x0000000000001148 &lt;+31&gt;:    cmpl   $0x2,-0x4(%rbp)</span><br><span class="line">   0x000000000000114c &lt;+35&gt;:    jle    0x1144 &lt;test_a+27&gt;</span><br><span class="line">   0x000000000000114e &lt;+37&gt;:    movl   $0x4,-0x10(%rbp)//最后在&#123;&#125;里面定义的c，在最上面（这样隔离最好）</span><br><span class="line">   0x0000000000001155 &lt;+44&gt;:    nop</span><br><span class="line">   0x0000000000001156 &lt;+45&gt;:    pop    %rbp</span><br><span class="line">   0x0000000000001157 &lt;+46&gt;:    ret</span><br><span class="line">End of assembler dump.</span><br></pre></td></tr></table></figure>
+<p>虽然a,b,c都是int类型，但根据汇编显然：<br>如果a可以被覆盖，需要0x8+0x8 （rbp+i+a）,到达返回地址<br>如果b可以被覆盖，需要0x8+0xc （rbp+i+a+b）,到达返回地址<br>如果c可以被覆盖，需要0x8+0x10（rbp+i+a+b+c）,到达返回地址<br>在pop rbp之前下断点，可以看到与上述一致的情况</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(gdb) x/4gx $rbp-0x10</span><br><span class="line">0x7fffffffdef0: 0x0000000200000004      0x0000000300000001</span><br><span class="line">0x7fffffffdf00: 0x00007fffffffdf10      0x0000555555555166</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/10/14/pwn-%E5%B1%80%E9%83%A8%E5%8F%98%E9%87%8F/" data-id="cm3l9ut9o000d057oh8qjb4re" data-title="pwn-局部变量" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pwn/" rel="tag">pwn</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2024/10/14/pwn-got%E4%B8%8Eplt/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">前一篇</strong>
+      <div class="article-nav-title">
+        
+          pwn-got与plt
+        
+      </div>
+    </a>
+  
+  
+    <a href="/1000/01/01/zt/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">后一篇</strong>
+      <div class="article-nav-title">zt</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/kernel/" rel="tag">kernel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pwn/" rel="tag">pwn</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%90%81%E7%BD%AE/" rel="tag">搁置</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9D%82%E9%A1%B9/" rel="tag">杂项</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AE%B0%E5%BD%95%E4%B8%A2%E5%A4%B1/" rel="tag">记录丢失</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/kernel/" style="font-size: 16.67px;">kernel</a> <a href="/tags/pwn/" style="font-size: 20px;">pwn</a> <a href="/tags/%E6%90%81%E7%BD%AE/" style="font-size: 13.33px;">搁置</a> <a href="/tags/%E6%9D%82%E9%A1%B9/" style="font-size: 10px;">杂项</a> <a href="/tags/%E8%AE%B0%E5%BD%95%E4%B8%A2%E5%A4%B1/" style="font-size: 10px;">记录丢失</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/11/">十一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/10/">十月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/1000/01/">一月 1000</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/11/17/mkdocs/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/11/16/windows/">windows</a>
+          </li>
+        
+          <li>
+            <a href="/2024/10/23/kernel/kernel-tmp-commit-creds/">kernel-commit_creds</a>
+          </li>
+        
+          <li>
+            <a href="/2024/10/19/kernel/kernel-gdb%E8%B0%83%E8%AF%95-socket/">kernel-gdb调试-socket</a>
+          </li>
+        
+          <li>
+            <a href="/2024/10/19/ebf/">ebf</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 zt20xx<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

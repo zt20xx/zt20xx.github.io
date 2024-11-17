@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>pwn-got与plt | zt20xx</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="如何查看函数的got与plt地址123x&#x2F;gx &amp;&#x27;atoi@got.plt&#x27;x&#x2F;gx &amp;&#x27;atoi@plt&#x27;x&#x2F;gx &amp;&#x27;atoi&#x27; got表与plt表有什么关系（以atoi为例）我们先看看pwntools是如何处理的 12elf.got[&quot;atoi&quot;]: 0x404018 elf.plt[&amp;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="pwn-got与plt">
+<meta property="og:url" content="http://example.com/2024/10/14/pwn-got%E4%B8%8Eplt/index.html">
+<meta property="og:site_name" content="zt20xx">
+<meta property="og:description" content="如何查看函数的got与plt地址123x&#x2F;gx &amp;&#x27;atoi@got.plt&#x27;x&#x2F;gx &amp;&#x27;atoi@plt&#x27;x&#x2F;gx &amp;&#x27;atoi&#x27; got表与plt表有什么关系（以atoi为例）我们先看看pwntools是如何处理的 12elf.got[&quot;atoi&quot;]: 0x404018 elf.plt[&amp;">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-10-14T12:59:28.000Z">
+<meta property="article:modified_time" content="2024-11-17T07:24:56.133Z">
+<meta property="article:author" content="zt20xx">
+<meta property="article:tag" content="pwn">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="zt20xx" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">zt20xx</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS 订阅"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="搜索"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-pwn-got与plt" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/10/14/pwn-got%E4%B8%8Eplt/" class="article-date">
+  <time class="dt-published" datetime="2024-10-14T12:59:28.000Z" itemprop="datePublished">2024-10-14</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      pwn-got与plt
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="如何查看函数的got与plt地址"><a href="#如何查看函数的got与plt地址" class="headerlink" title="如何查看函数的got与plt地址"></a>如何查看函数的got与plt地址</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">x/gx &amp;&#x27;atoi@got.plt&#x27;</span><br><span class="line">x/gx &amp;&#x27;atoi@plt&#x27;</span><br><span class="line">x/gx &amp;&#x27;atoi&#x27;</span><br></pre></td></tr></table></figure>
+<h1 id="got表与plt表有什么关系（以atoi为例）"><a href="#got表与plt表有什么关系（以atoi为例）" class="headerlink" title="got表与plt表有什么关系（以atoi为例）"></a>got表与plt表有什么关系（以atoi为例）</h1><p>我们先看看pwntools是如何处理的</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">elf.got[&quot;atoi&quot;]: 0x404018 </span><br><span class="line">elf.plt[&quot;atoi&quot;]: 0x401060 </span><br></pre></td></tr></table></figure>
+<p>函数未调用之前，关系如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">0x404018 &lt;atoi@got.plt&gt;:        0x0000000000401066</span><br><span class="line">0x401060 &lt;atoi@plt&gt;:    0x036800002fb225ff</span><br><span class="line">0x7ffff7e08920 &lt;__GI_atoi&gt;:     0x00000aba08ec8348</span><br></pre></td></tr></table></figure>
+<p>可以看到<br><code>.got[&quot;atoi&quot;]</code>就是<code>&amp;&#39;atoi@got.plt&#39;</code>就是got的地址<br><code>.plt[&quot;atoi&quot;]</code>就是<code>&amp;&#39;atoi@plt&#39;</code>就是plt的地址</p>
+<p>函数在被调用时会跳转到plt (<code>call   0x401060 &lt;atoi@plt&gt;</code>)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(gdb) x/3i 0x401060</span><br><span class="line">   0x401060 &lt;atoi@plt&gt;: jmp    *0x2fb2(%rip)        # 0x404018 &lt;atoi@got.plt&gt;</span><br><span class="line">   0x401066 &lt;atoi@plt+6&gt;:       push   $0x3</span><br><span class="line">   0x40106b &lt;atoi@plt+11&gt;:      jmp    0x401020</span><br></pre></td></tr></table></figure>
+<p>可以看到程序会先去到got表处运行，然后（在函数未被调用的情况下）又跳转回来(0x401066)继续运行，这个继续运行的东西就是延迟绑定。这个绑定会将got的值改为实际函数地址，从而不会再次运行延时绑定。<br>如下所示</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">0x404018 &lt;atoi@got.plt&gt;:        0x00007ffff7e08920</span><br><span class="line">0x401060 &lt;atoi@plt&gt;:    0x036800002fb225ff</span><br><span class="line">0x7ffff7e08920 &lt;__GI_atoi&gt;:     0x00000aba08ec8348</span><br></pre></td></tr></table></figure>
+
+<p>所以在函数未被调用时，泄露got的值就是plt的地址+0x6(elf.plt[“atoi”]: 0x401060)好像也没有任何意义，这和lib中的偏移没有任何关系。</p>
+<p>综上，在延迟绑定后函数调用关系如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">call atoi-&gt;plt-&gt;got-&gt;atoi</span><br><span class="line">call   0x401060 &lt;atoi@plt&gt;</span><br><span class="line">0x401060 &lt;atoi@plt&gt;: jmp    *0x2fb2(%rip)        # 0x404018 &lt;atoi@got.plt&gt;</span><br><span class="line">上面一行等价于jmp 0x00007ffff7e08920</span><br></pre></td></tr></table></figure>
+
+<h1 id="如何开启或者关闭延迟绑定"><a href="#如何开启或者关闭延迟绑定" class="headerlink" title="如何开启或者关闭延迟绑定"></a>如何开启或者关闭延迟绑定</h1><p>延迟绑定默认开启<br>使用-Wl,-z,now就会关闭延迟绑定，使用非延迟绑定<br>使用-Wl,-z,lazy显式开启延迟绑定</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/10/14/pwn-got%E4%B8%8Eplt/" data-id="cm3l9ut9i0004057o966tbg0j" data-title="pwn-got与plt" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pwn/" rel="tag">pwn</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2024/10/14/kernel/kernel-qemu-system%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">前一篇</strong>
+      <div class="article-nav-title">
+        
+          kernel-qemu-system环境搭建
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2024/10/14/pwn-%E5%B1%80%E9%83%A8%E5%8F%98%E9%87%8F/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">后一篇</strong>
+      <div class="article-nav-title">pwn-局部变量</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/kernel/" rel="tag">kernel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pwn/" rel="tag">pwn</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%90%81%E7%BD%AE/" rel="tag">搁置</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9D%82%E9%A1%B9/" rel="tag">杂项</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AE%B0%E5%BD%95%E4%B8%A2%E5%A4%B1/" rel="tag">记录丢失</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/kernel/" style="font-size: 16.67px;">kernel</a> <a href="/tags/pwn/" style="font-size: 20px;">pwn</a> <a href="/tags/%E6%90%81%E7%BD%AE/" style="font-size: 13.33px;">搁置</a> <a href="/tags/%E6%9D%82%E9%A1%B9/" style="font-size: 10px;">杂项</a> <a href="/tags/%E8%AE%B0%E5%BD%95%E4%B8%A2%E5%A4%B1/" style="font-size: 10px;">记录丢失</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/11/">十一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/10/">十月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/1000/01/">一月 1000</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/11/17/mkdocs/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/11/16/windows/">windows</a>
+          </li>
+        
+          <li>
+            <a href="/2024/10/23/kernel/kernel-tmp-commit-creds/">kernel-commit_creds</a>
+          </li>
+        
+          <li>
+            <a href="/2024/10/19/kernel/kernel-gdb%E8%B0%83%E8%AF%95-socket/">kernel-gdb调试-socket</a>
+          </li>
+        
+          <li>
+            <a href="/2024/10/19/ebf/">ebf</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 zt20xx<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

