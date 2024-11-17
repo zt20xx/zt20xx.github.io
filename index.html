@@ -69,34 +69,6 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-mkdocs" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2024/11/17/mkdocs/" class="article-date">
-  <time class="dt-published" datetime="2024-11-17T07:24:56.123Z" itemprop="datePublished">2024-11-17</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        {"site_name":"My Docs"}
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://zt20xx.github.io/2024/11/17/mkdocs/" data-id="cm3l9ut9h0003057oek3b5b2x" data-title="" class="article-share-link"><span class="fa fa-share">分享</span></a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
     <article id="post-windows" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2024/11/16/windows/" class="article-date">
@@ -532,6 +504,48 @@
 
 
   
+    <article id="post-kernel/kernel-gdb调试-序" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/10/19/kernel/kernel-gdb%E8%B0%83%E8%AF%95-%E5%BA%8F/" class="article-date">
+  <time class="dt-published" datetime="2024-10-19T10:23:09.000Z" itemprop="datePublished">2024-10-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/10/19/kernel/kernel-gdb%E8%B0%83%E8%AF%95-%E5%BA%8F/">kernel-gdb调试-序</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>目前还是选择了qemu-system+gdb python调试内核<br>它满足了以下需求<br>1.避免大量的重复性工作<br>2.特制断点，以及复杂的断点关系<br>3.更清晰美观的打印信息</p>
+<p>由于网络上相关资料比较少，就自己用官网api写了一下，目前使用效果还行。<br><a target="_blank" rel="noopener" href="https://sourceware.org/gdb/current/onlinedocs/gdb.html/Python-API.html">https://sourceware.org/gdb/current/onlinedocs/gdb.html/Python-API.html</a><br>主要使用gdb.Breakpoint，与gdb.FinishBreakpoint部分</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://zt20xx.github.io/2024/10/19/kernel/kernel-gdb%E8%B0%83%E8%AF%95-%E5%BA%8F/" data-id="cm3l9ut9v000r057o67m30s5t" data-title="kernel-gdb调试-序" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kernel/" rel="tag">kernel</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
 
 
   <nav id="page-nav">
@@ -582,10 +596,6 @@
       <ul>
         
           <li>
-            <a href="/2024/11/17/mkdocs/">(no title)</a>
-          </li>
-        
-          <li>
             <a href="/2024/11/16/windows/">windows</a>
           </li>
         
@@ -599,6 +609,10 @@
         
           <li>
             <a href="/2024/10/19/ebf/">ebf</a>
+          </li>
+        
+          <li>
+            <a href="/2024/10/19/%E5%BA%8F%E5%88%97%E8%87%AA%E5%8A%A8%E6%9C%BA/">序列自动机</a>
           </li>
         
       </ul>
