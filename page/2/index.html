@@ -69,6 +69,63 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-misc/ebf" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/10/19/misc/ebf/" class="article-date">
+  <time class="dt-published" datetime="2024-10-19T15:07:56.000Z" itemprop="datePublished">2024-10-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/10/19/misc/ebf/">ebf</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">https://aka.pw/bpf-ecli</span><br><span class="line">https://github.com/eunomia-bpf/eunomia-bpf/releases/latest/download/ecc</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt-get install libbpf-dev</span><br><span class="line"><span class="built_in">sudo</span> apt-get install bpfcc-tools libbpfcc-dev</span><br><span class="line"><span class="built_in">sudo</span> apt-get install cmake clang llvm llvm-dev bison flex libelf-dev zlib1g-dev libfl-dev</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">./ecc minimal.bpf.c</span><br><span class="line"><span class="built_in">sudo</span> ./ecli run ./package.json</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause) */</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> BPF_NO_GLOBAL_DATA</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;linux/bpf.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bpf/bpf_helpers.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bpf/bpf_tracing.h&gt;</span></span></span><br><span class="line"><span class="comment">// typedef unsigned int u32;</span></span><br><span class="line"><span class="comment">// typedef int pid_t;</span></span><br><span class="line"><span class="comment">// const pid_t pid_filter = 0;</span></span><br><span class="line"></span><br><span class="line"><span class="type">char</span> LICENSE[] SEC(<span class="string">&quot;license&quot;</span>) = <span class="string">&quot;Dual BSD/GPL&quot;</span>;</span><br><span class="line"><span class="type">const</span> <span class="type">char</span> target_process[] = <span class="string">&quot;nl&quot;</span>;</span><br><span class="line"></span><br><span class="line">SEC(<span class="string">&quot;tp/syscalls/sys_enter_write&quot;</span>)</span><br><span class="line"><span class="type">int</span> <span class="title function_">handle_tp</span><span class="params">(<span class="keyword">struct</span> pt_regs *ctx)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">char</span> comm[<span class="number">16</span>];</span><br><span class="line">    bpf_get_current_comm(&amp;comm, <span class="keyword">sizeof</span>(comm));</span><br><span class="line"></span><br><span class="line">    <span class="comment">//名称校验</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="keyword">sizeof</span>(comm); i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (comm[i] != target_process[i])</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (comm[i] == <span class="string">&#x27;\0&#x27;</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">   <span class="comment">// bpf_printk(&quot;BPF triggered from &#x27;%s&#x27; process.\n&quot;, target_process);</span></span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> pid = bpf_get_current_pid_tgid() &gt;&gt; <span class="number">32</span>;</span><br><span class="line">    <span class="type">int</span> tid = bpf_get_current_pid_tgid();</span><br><span class="line">    <span class="comment">// pid_t pid = bpf_get_current_pid_tgid() &gt;&gt; 32;</span></span><br><span class="line">    <span class="comment">// pid_t tid = bpf_get_current_pid_tgid();</span></span><br><span class="line"><span class="comment">// pid校验</span></span><br><span class="line"><span class="comment">//  if (pid_filter &amp;&amp; pid != pid_filter)</span></span><br><span class="line"><span class="comment">//   return 0;</span></span><br><span class="line">    bpf_printk(<span class="string">&quot;PID: %u, TID: %u\n&quot;</span>, pid, tid);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后通过sudo cat &#x2F;sys&#x2F;kernel&#x2F;debug&#x2F;tracing&#x2F;trace_pipe查看信息</p>
+<p>sudo apt-get install libbpf-dev</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">┌──(kali㉿kali)-[/usr/include]</span><br><span class="line">└─$ <span class="built_in">sudo</span> <span class="built_in">ln</span> -s /usr/src/linux-headers-6.5.0-kali3-common/include/uapi</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>SEC(“tp&#x2F;syscalls&#x2F;sys_enter_write”)</p>
+<ul>
+<li><strong>tp</strong>: 表示 tracepoint，是一种在系统运行时添加触发点来捕获事件的机制。</li>
+<li><strong>syscalls</strong>: 表示系统调用，表明这个 tracepoint 用于跟踪系统调用。</li>
+<li><strong>sys_enter_write</strong>: 是具体的 tracepoint 名称，表示在进入 <strong>write</strong> 系统调用时触发。在 Linux 中，<strong>sys_enter_</strong>* tracepoints 是在系统调用进入时触发的。</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://zt20xx.github.io/2024/10/19/misc/ebf/" data-id="cm3x49dri0001iy7o1kpxbrbv" data-title="ebf" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%90%81%E7%BD%AE/" rel="tag">搁置</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-misc/序列自动机" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2024/10/19/misc/%E5%BA%8F%E5%88%97%E8%87%AA%E5%8A%A8%E6%9C%BA/" class="article-date">
@@ -469,60 +526,6 @@
 
 
   
-    <article id="post-kernel/kernel-qemu-system环境搭建" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2024/10/14/kernel/kernel-qemu-system%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" class="article-date">
-  <time class="dt-published" datetime="2024-10-14T14:30:49.000Z" itemprop="datePublished">2024-10-14</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2024/10/14/kernel/kernel-qemu-system%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/">kernel-qemu-system环境搭建</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>等之后再完善相关操作吧</p>
-<h1 id="kernel"><a href="#kernel" class="headerlink" title="kernel"></a>kernel</h1><p>由于调试需要（电脑很菜,ropper加载defconfig编译的内核会无法成功 ），保持了最小的内核开启选项(串口打印输出设置，没有音频等)，配合busybox不到1s就可以启动<br>至少保持以下选项开启</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">CONFIG_DEVTMPFS_MOUNT 允许使用设备文件系统,使得系统启动时自动创建设备文件如/dev/null</span><br><span class="line">CONFIG_MODULE_FORCE_LOAD 强制加载驱动</span><br><span class="line">CONFIG_SMP  多线程</span><br><span class="line"></span><br><span class="line"># canary支持</span><br><span class="line">CONFIG_CC_HAS_SANE_STACKPROTECTOR=y</span><br><span class="line">CONFIG_HAVE_STACKPROTECTOR=y</span><br><span class="line">CONFIG_CC_HAS_STACKPROTECTOR_NONE=y</span><br><span class="line">CONFIG_STACKPROTECTOR=y</span><br><span class="line">CONFIG_STACKPROTECTOR_STRONG=y</span><br></pre></td></tr></table></figure>
-<h1 id="文件系统"><a href="#文件系统" class="headerlink" title="文件系统"></a>文件系统</h1><h2 id="busybox"><a href="#busybox" class="headerlink" title="busybox"></a>busybox</h2><p>没有比busybox启动更快的方法了</p>
-<h2 id="buildroot"><a href="#buildroot" class="headerlink" title="buildroot"></a>buildroot</h2><p>最定制的方法，busybox虽然快，但是没有基本的工具，安装工具也特别麻烦，可以使用buildroot将工具编译进去</p>
-<h2 id="debootstrap"><a href="#debootstrap" class="headerlink" title="debootstrap"></a>debootstrap</h2><p>buildroot虽然将工具编译进去了，但是再向里面添加工具就比较麻烦，使用debootstrap就可以持续地使用apt安装新的工具<br><a target="_blank" rel="noopener" href="https://github.com/google/syzkaller/blob/master/tools/create-image.sh">https://github.com/google/syzkaller/blob/master/tools/create-image.sh</a></p>
-<h2 id="debian云镜像"><a href="#debian云镜像" class="headerlink" title="debian云镜像"></a>debian云镜像</h2><p>直接获得一个隔离的环境，不过这样需要自己编译并安装内核，然后将内核复制出来，否则怎么调试内核呢？<br><a target="_blank" rel="noopener" href="https://cloud.debian.org/images/cloud">https://cloud.debian.org/images/cloud</a></p>
-<h1 id="用户分享"><a href="#用户分享" class="headerlink" title="用户分享"></a>用户分享</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">new:</span><br><span class="line">https://people.debian.org/~gio/dqib/</span><br><span class="line">2018(4.9;4.14,4.15):</span><br><span class="line">https://people.debian.org/~jcowgill/qemu-mips/</span><br><span class="line">old:</span><br><span class="line">https://people.debian.org/~aurel32/qemu/</span><br></pre></td></tr></table></figure>
-<h1 id="qemu-system启动配置"><a href="#qemu-system启动配置" class="headerlink" title="qemu-system启动配置"></a>qemu-system启动配置</h1><h2 id="共享文件夹"><a href="#共享文件夹" class="headerlink" title="共享文件夹"></a>共享文件夹</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-virtfs local,path=./share,mount_tag=shared_mount,security_model=none,id=shared_folder</span><br></pre></td></tr></table></figure>
-<p>内核需要支持9p</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo mount -t 9p -o trans=virtio shared_mount /mnt/shared</span><br></pre></td></tr></table></figure>
-
-
-
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://zt20xx.github.io/2024/10/14/kernel/kernel-qemu-system%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" data-id="cm3l9ut9x000x057obyk69nw3" data-title="kernel-qemu-system环境搭建" class="article-share-link"><span class="fa fa-share">分享</span></a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kernel/" rel="tag">kernel</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
 
 
   <nav id="page-nav">
@@ -541,7 +544,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/kernel/" rel="tag">kernel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pwn/" rel="tag">pwn</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%90%81%E7%BD%AE/" rel="tag">搁置</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9D%82%E9%A1%B9/" rel="tag">杂项</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AE%B0%E5%BD%95%E4%B8%A2%E5%A4%B1/" rel="tag">记录丢失</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/bilibili/" rel="tag">bilibili</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kernel/" rel="tag">kernel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pwn/" rel="tag">pwn</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%90%81%E7%BD%AE/" rel="tag">搁置</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9D%82%E9%A1%B9/" rel="tag">杂项</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AE%B0%E5%BD%95%E4%B8%A2%E5%A4%B1/" rel="tag">记录丢失</a></li></ul>
     </div>
   </div>
 
@@ -551,7 +554,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/kernel/" style="font-size: 20px;">kernel</a> <a href="/tags/pwn/" style="font-size: 20px;">pwn</a> <a href="/tags/%E6%90%81%E7%BD%AE/" style="font-size: 15px;">搁置</a> <a href="/tags/%E6%9D%82%E9%A1%B9/" style="font-size: 10px;">杂项</a> <a href="/tags/%E8%AE%B0%E5%BD%95%E4%B8%A2%E5%A4%B1/" style="font-size: 10px;">记录丢失</a>
+      <a href="/tags/bilibili/" style="font-size: 10px;">bilibili</a> <a href="/tags/kernel/" style="font-size: 20px;">kernel</a> <a href="/tags/pwn/" style="font-size: 20px;">pwn</a> <a href="/tags/%E6%90%81%E7%BD%AE/" style="font-size: 15px;">搁置</a> <a href="/tags/%E6%9D%82%E9%A1%B9/" style="font-size: 10px;">杂项</a> <a href="/tags/%E8%AE%B0%E5%BD%95%E4%B8%A2%E5%A4%B1/" style="font-size: 10px;">记录丢失</a>
     </div>
   </div>
 
@@ -560,7 +563,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2048/10/">十月 2048</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/11/">十一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/10/">十月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/1000/01/">一月 1000</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2048/10/">十月 2048</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/12/">十二月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/11/">十一月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/10/">十月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/1000/01/">一月 1000</a></li></ul>
     </div>
   </div>
 
@@ -577,6 +580,10 @@
           </li>
         
           <li>
+            <a href="/2024/12/04/bilibili-up/">bilibili-up</a>
+          </li>
+        
+          <li>
             <a href="/2024/11/26/kernel/kernel-%E5%87%BA%E9%A2%98-check/">kernel-出题-ret2user</a>
           </li>
         
@@ -586,10 +593,6 @@
         
           <li>
             <a href="/2024/11/26/kernel/kernel-%E5%87%BA%E9%A2%98-double_fetch/">kernel-出题-double_fetch</a>
-          </li>
-        
-          <li>
-            <a href="/2024/11/26/kernel/kernel-%E5%87%BA%E9%A2%98-ret2dir/">kernel-出题-ret2dir</a>
           </li>
         
       </ul>
