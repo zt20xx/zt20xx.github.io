@@ -6,15 +6,15 @@
   
   <title>kernel-出题-序 | zt20xx</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="先等请求合并吧，现在先随便写写 1.不使用内核地址（内核rop工具都有些小问题，资源消耗大，kaslr下异常），使用内核驱动的地址作为rop2.使用busybox，不使用debootstrap（或者用一个例子） 新功能介绍 内核基本选项 12make defconfigmake -j&#96;nproc&#96; bzImage  启动，以check为例其目录结构如下 123456check├── Makefil">
+  <meta name="description" content="先等请求合并吧，现在先随便写写  不使用内核地址（内核rop工具都有些小问题，资源消耗大，kaslr下异常），使用内核驱动的地址作为rop 使用busybox，不使用debootstrap（或者用一个例子） 其实不是出题，是简化题目，体现利用技巧的新功能介绍  内核基本选项 12make defconfigmake -j&#96;nproc&#96; bzImage  启动，以check为例其目录结构如下 123">
 <meta property="og:type" content="article">
 <meta property="og:title" content="kernel-出题-序">
 <meta property="og:url" content="https://zt20xx.github.io/2024/11/25/kernel/kernel-%E5%87%BA%E9%A2%98-%E5%BA%8F/index.html">
 <meta property="og:site_name" content="zt20xx">
-<meta property="og:description" content="先等请求合并吧，现在先随便写写 1.不使用内核地址（内核rop工具都有些小问题，资源消耗大，kaslr下异常），使用内核驱动的地址作为rop2.使用busybox，不使用debootstrap（或者用一个例子） 新功能介绍 内核基本选项 12make defconfigmake -j&#96;nproc&#96; bzImage  启动，以check为例其目录结构如下 123456check├── Makefil">
+<meta property="og:description" content="先等请求合并吧，现在先随便写写  不使用内核地址（内核rop工具都有些小问题，资源消耗大，kaslr下异常），使用内核驱动的地址作为rop 使用busybox，不使用debootstrap（或者用一个例子） 其实不是出题，是简化题目，体现利用技巧的新功能介绍  内核基本选项 12make defconfigmake -j&#96;nproc&#96; bzImage  启动，以check为例其目录结构如下 123">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-11-25T14:34:10.000Z">
-<meta property="article:modified_time" content="2024-12-03T15:53:35.265Z">
+<meta property="article:modified_time" content="2024-12-05T13:38:55.654Z">
 <meta property="article:author" content="zt20xx">
 <meta property="article:tag" content="kernel">
 <meta name="twitter:card" content="summary">
@@ -95,8 +95,11 @@
     <div class="e-content article-entry" itemprop="articleBody">
       
         <p>先等请求合并吧，现在先随便写写</p>
-<p>1.不使用内核地址（内核rop工具都有些小问题，资源消耗大，kaslr下异常），使用内核驱动的地址作为rop<br>2.使用busybox，不使用debootstrap（或者用一个例子）</p>
-<p>新功能介绍</p>
+<ol>
+<li>不使用内核地址（内核rop工具都有些小问题，资源消耗大，kaslr下异常），使用内核驱动的地址作为rop</li>
+<li>使用busybox，不使用debootstrap（或者用一个例子）</li>
+<li>其实不是出题，是简化题目，体现利用技巧的<br>新功能介绍</li>
+</ol>
 <p>内核基本选项</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">make defconfig</span><br><span class="line">make -j`<span class="built_in">nproc</span>` bzImage</span><br></pre></td></tr></table></figure>
 
@@ -123,11 +126,11 @@
     
 <nav id="article-nav">
   
-    <a href="/2024/11/26/kernel/kernel-%E5%87%BA%E9%A2%98-pte_pud%E9%87%8D%E5%8F%A0/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2024/11/26/kernel/kernel-%E5%87%BA%E9%A2%98-pte_pmd%E9%87%8D%E5%8F%A0/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption">前一篇</strong>
       <div class="article-nav-title">
         
-          kernel-出题-pte_pud重叠
+          kernel-出题-pte_pmd重叠
         
       </div>
     </a>
