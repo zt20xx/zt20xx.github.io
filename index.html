@@ -109,6 +109,55 @@
 
 
   
+    <article id="post-pax-pageexec-old" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/12/05/pax-pageexec-old/" class="article-date">
+  <time class="dt-published" datetime="2024-12-05T13:51:58.000Z" itemprop="datePublished">2024-12-05</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/12/05/pax-pageexec-old/">pax-pageexec.old</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <table>
+<thead>
+<tr>
+<th><a target="_blank" rel="noopener" href="https://pax.grsecurity.net/docs/pageexec.old.txt">pageexec.old.txt</a></th>
+<th>2000.11.16 18:00 GMT</th>
+<th>the original design &amp; implementation of PAGEEXEC, badly out of date</th>
+</tr>
+</thead>
+</table>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line">pageexec-old</span><br><span class="line">                              ITLB</span><br><span class="line"></span><br><span class="line">                               - | S | U</span><br><span class="line">                              -----------</span><br><span class="line">                     D     - | 0 | 1 | 2 |</span><br><span class="line">                     T        -----------</span><br><span class="line">                     L     S | 3 | 4 | 5 |</span><br><span class="line">                     B        -----------</span><br><span class="line">                           U | 6 | 7 | 8 |</span><br><span class="line">                              -----------</span><br><span class="line">good:</span><br><span class="line">	0,3,6page不可执行,1,4,7page仅sup执行</span><br><span class="line">	page只有sup可以执行</span><br><span class="line">	用户的执行page不可以被修改</span><br><span class="line">good:</span><br><span class="line">sup执行page</span><br><span class="line">        0 -&gt; 1</span><br><span class="line">        3 -&gt; 4</span><br><span class="line">        6 -&gt; 7</span><br><span class="line">运行初始化为任意用户读写</span><br><span class="line">        0 -&gt; 3</span><br><span class="line">        0 -&gt; 6</span><br><span class="line">sup的可执行page运行用户读写</span><br><span class="line">        1 -&gt; 4</span><br><span class="line">        1 -&gt; 7</span><br><span class="line">bad:</span><br><span class="line">用户突然可执行一个页</span><br><span class="line">        0 -&gt; 2	</span><br><span class="line">        3 -&gt; 5</span><br><span class="line">        6 -&gt; 8</span><br><span class="line">用户可执行page被读写</span><br><span class="line">        2 -&gt; 5</span><br><span class="line">        2 -&gt; 8</span><br><span class="line"></span><br><span class="line">ITLB的初始化情况</span><br><span class="line">        0 -&gt; 1 (ITLB fill, PTE specifies Supervisor rights)</span><br><span class="line">        0 -&gt; 2 (ITLB fill, PTE specifies User rights)</span><br><span class="line">        3 -&gt; 4 (ITLB fill, PTE specifies Supervisor rights)</span><br><span class="line">        3 -&gt; 5 (ITLB fill, PTE specifies User rights)      </span><br><span class="line">        6 -&gt; 7 (ITLB fill, PTE specifies Supervisor rights)</span><br><span class="line">        6 -&gt; 8 (ITLB fill, PTE specifies User rights)      </span><br><span class="line">DTLB的初始化情况</span><br><span class="line">        0 -&gt; 3 (DTLB fill, PTE specifies Supervisor rights)</span><br><span class="line">        0 -&gt; 6 (DTLB fill, PTE specifies User rights)      </span><br><span class="line">        1 -&gt; 4 (DTLB fill, PTE specifies Supervisor rights)</span><br><span class="line">        1 -&gt; 7 (DTLB fill, PTE specifies User rights)      </span><br><span class="line">        2 -&gt; 5 (DTLB fill, PTE specifies Supervisor rights)</span><br><span class="line">        2 -&gt; 8 (DTLB fill, PTE specifies User rights)  </span><br><span class="line">flushing of the TLB </span><br><span class="line">        4 -&gt; 0 (explicit TLB flush caused by an instruction)</span><br><span class="line">        8 -&gt; 0 (explicit TLB flush caused by an instruction)</span><br><span class="line"></span><br><span class="line">####################</span><br><span class="line">   (to protect the innocent, names have been changed ;-)</span><br><span class="line"></span><br><span class="line">       &lt;innocent&gt; well, buffer overflows will be gone in 2-3 years </span><br><span class="line">       &lt;innocent&gt; hopefully</span><br><span class="line">       &lt;pax&gt; sooner ;-)</span><br><span class="line">       &lt;pax&gt; a month at most</span><br><span class="line">       &lt;innocent&gt; what ??</span><br><span class="line">       &lt;innocent&gt; you bullshitting me now or what ?</span><br><span class="line">       &lt;pax&gt; just sit back and watch ;-)</span><br><span class="line">       &lt;pax&gt; sure i do</span><br><span class="line">       &lt;pax&gt; no ;-)</span><br><span class="line">       &lt;innocent&gt; ok</span><br><span class="line">       &lt;innocent&gt; phew</span><br><span class="line">       &lt;innocent&gt; argh</span><br><span class="line">       &lt;innocent&gt; you got me there for a second ;&gt;</span><br><span class="line">       &lt;pax&gt; heh, why?</span><br><span class="line">       &lt;innocent&gt; coz I was in panic that there was something big coming up</span><br><span class="line">       &lt;innocent&gt; it is already getting harder to find overflows now</span><br><span class="line">#########################</span><br><span class="line"></span><br><span class="line">https://pax.grsecurity.net/docs/pageexec.old.txt</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://zt20xx.github.io/2024/12/05/pax-pageexec-old/" data-id="cm4bdplvf00007f7o6r38fesv" data-title="pax-pageexec.old" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pax/" rel="tag">pax</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-bilibili-up" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2024/12/04/bilibili-up/" class="article-date">
@@ -478,7 +527,7 @@
 
 <p>pte与pud重叠</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">(qemu) va2pa 0x8040000000</span><br><span class="line">PGD[1]-&gt;PUD[1]-&gt;PMD[0]-&gt;PTE[0]</span><br><span class="line">cr3: 0x7b45a000</span><br><span class="line">PGD[1]: 0x7c74b000</span><br><span class="line">PUD[1]: 0x6dfcc000</span><br><span class="line">PMD[0]: 0x65e2e000</span><br><span class="line">PTE[0]: 0x663c2000</span><br><span class="line">0x8040000000:0xcafebabe</span><br><span class="line">(qemu) va2pa 0x10000200000</span><br><span class="line">PGD[2]-&gt;PUD[0]-&gt;PMD[1]-&gt;PTE[0]</span><br><span class="line">cr3: 0x7b45a000</span><br><span class="line">PGD[2]: 0x6df3d000</span><br><span class="line">PUD[0]: 0x6df3e000</span><br><span class="line">PMD[1]: 0x6dfcc000</span><br><span class="line">PTE[0]: 0x65e2e000</span><br><span class="line">0x10000200000:0x80000000663c2067</span><br><span class="line"></span><br><span class="line">PTE[0]: 0x65e2e000就是PMD[0]: 0x65e2e000</span><br></pre></td></tr></table></figure>
-<p>重叠后就可以实现任意地址读写了</p>
+<p>重叠后就可以实现任意地址读写了，cve作者通过修改modprobe_path实现提权</p>
 
       
     </div>
@@ -553,72 +602,6 @@
 
 
   
-    <article id="post-windows" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2024/11/16/windows/" class="article-date">
-  <time class="dt-published" datetime="2024-11-16T12:13:09.000Z" itemprop="datePublished">2024-11-16</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2024/11/16/windows/">windows</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <table>
-<thead>
-<tr>
-<th>设置</th>
-<th>快捷键</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>windows实时字幕</td>
-<td>win ctrl l</td>
-</tr>
-<tr>
-<td>PowerToys 设置</td>
-<td></td>
-</tr>
-<tr>
-<td>键盘映射</td>
-<td>caps lock -&gt; esc</td>
-</tr>
-<tr>
-<td>ocr</td>
-<td>win shift t</td>
-</tr>
-<tr>
-<td>颜色选取</td>
-<td>win shift c</td>
-</tr>
-</tbody></table>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://zt20xx.github.io/2024/11/16/windows/" data-id="cm49xop2h0000ou7odt2k9b7b" data-title="windows" class="article-share-link"><span class="fa fa-share">分享</span></a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
 
 
   <nav id="page-nav">
@@ -637,7 +620,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/bilibili/" rel="tag">bilibili</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/game/" rel="tag">game</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kernel/" rel="tag">kernel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pwn/" rel="tag">pwn</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%90%81%E7%BD%AE/" rel="tag">搁置</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9D%82%E9%A1%B9/" rel="tag">杂项</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AE%B0%E5%BD%95%E4%B8%A2%E5%A4%B1/" rel="tag">记录丢失</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/bilibili/" rel="tag">bilibili</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/game/" rel="tag">game</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kernel/" rel="tag">kernel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pax/" rel="tag">pax</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pwn/" rel="tag">pwn</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%90%81%E7%BD%AE/" rel="tag">搁置</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9D%82%E9%A1%B9/" rel="tag">杂项</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AE%B0%E5%BD%95%E4%B8%A2%E5%A4%B1/" rel="tag">记录丢失</a></li></ul>
     </div>
   </div>
 
@@ -647,7 +630,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/bilibili/" style="font-size: 10px;">bilibili</a> <a href="/tags/game/" style="font-size: 10px;">game</a> <a href="/tags/kernel/" style="font-size: 20px;">kernel</a> <a href="/tags/pwn/" style="font-size: 20px;">pwn</a> <a href="/tags/%E6%90%81%E7%BD%AE/" style="font-size: 15px;">搁置</a> <a href="/tags/%E6%9D%82%E9%A1%B9/" style="font-size: 10px;">杂项</a> <a href="/tags/%E8%AE%B0%E5%BD%95%E4%B8%A2%E5%A4%B1/" style="font-size: 10px;">记录丢失</a>
+      <a href="/tags/bilibili/" style="font-size: 10px;">bilibili</a> <a href="/tags/game/" style="font-size: 10px;">game</a> <a href="/tags/kernel/" style="font-size: 20px;">kernel</a> <a href="/tags/pax/" style="font-size: 10px;">pax</a> <a href="/tags/pwn/" style="font-size: 20px;">pwn</a> <a href="/tags/%E6%90%81%E7%BD%AE/" style="font-size: 15px;">搁置</a> <a href="/tags/%E6%9D%82%E9%A1%B9/" style="font-size: 10px;">杂项</a> <a href="/tags/%E8%AE%B0%E5%BD%95%E4%B8%A2%E5%A4%B1/" style="font-size: 10px;">记录丢失</a>
     </div>
   </div>
 
@@ -673,6 +656,10 @@
           </li>
         
           <li>
+            <a href="/2024/12/05/pax-pageexec-old/">pax-pageexec.old</a>
+          </li>
+        
+          <li>
             <a href="/2024/12/04/bilibili-up/">bilibili-up</a>
           </li>
         
@@ -682,10 +669,6 @@
         
           <li>
             <a href="/2024/11/26/kernel/kernel-%E5%87%BA%E9%A2%98-check/">kernel-出题-check</a>
-          </li>
-        
-          <li>
-            <a href="/2024/11/26/kernel/kernel-%E5%87%BA%E9%A2%98-ret2user/">kernel-出题-ret2user</a>
           </li>
         
       </ul>
